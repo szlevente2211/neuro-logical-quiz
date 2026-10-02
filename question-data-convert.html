@@ -146,6 +146,38 @@
       margin-top: 6px;
     }
 
+    .category-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .category-row select {
+      flex: 1;
+    }
+
+    .category-create {
+      display: none;
+      margin-top: 10px;
+      gap: 10px;
+    }
+
+    .category-create.active {
+      display: flex;
+    }
+
+    .category-create input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 600px) {
+      .category-row,
+      .category-create {
+        flex-direction: column;
+      }
+    }
+
     .status {
       margin-top: 15px;
       padding: 12px;
@@ -306,12 +338,42 @@
     <div class="field">
       <label for="category">Témakör</label>
 
-      <select id="category">
-        <option value="retina">Retina</option>
-        <option value="latopalya">Látópálya</option>
-        <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
-        <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
-      </select>
+      <div class="category-row">
+        <select id="category"></select>
+
+        <button
+          type="button"
+          class="secondary"
+          onclick="showNewCategoryInput()"
+        >
+          + Új kategória
+        </button>
+      </div>
+
+      <div id="newCategoryRow" class="category-create">
+        <input
+          type="text"
+          id="newCategoryName"
+          placeholder="Új kategória neve..."
+          maxlength="100"
+        >
+
+        <button
+          type="button"
+          class="success"
+          onclick="createCategory()"
+        >
+          Létrehozás
+        </button>
+
+        <button
+          type="button"
+          class="secondary"
+          onclick="hideNewCategoryInput()"
+        >
+          Mégse
+        </button>
+      </div>
     </div>
 
 
@@ -428,10 +490,6 @@
     onchange="updateDisplay()"
   >
     <option value="all">Összes témakör</option>
-    <option value="retina">Retina</option>
-    <option value="latopalya">Látópálya</option>
-    <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
-    <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
   </select>
 
 </div>
@@ -534,12 +592,7 @@
         Az importált kérdések témaköre
       </label>
 
-      <select id="importCategory">
-        <option value="retina">Retina</option>
-        <option value="latopalya">Látópálya</option>
-        <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
-        <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
-      </select>
+      <select id="importCategory"></select>
 
       <div class="hint">
         A jelenlegi egyszerű import során minden beillesztett kérdés
@@ -587,12 +640,219 @@
    * ============================================================
    */
 
-  const categories = {
+  const defaultCategories = {
     retina: "Retina",
     latopalya: "Látópálya",
     kergi_feldolgozas: "Kérgi feldolgozás",
     nem_tudatos_palyak: "Nem tudatos pályák"
   };
+
+  let categories = { ...defaultCategories };
+
+  function loadSavedCategoryNames() {
+    try {
+      const saved =
+        JSON.parse(
+          localStorage.getItem("neuroLogicalCategoryNames") || "{}"
+        );
+
+      if (saved && typeof saved === "object") {
+        categories = {
+          ...categories,
+          ...saved
+        };
+      }
+    } catch (error) {
+      console.warn("A mentett kategóriák nevei nem tölthetők be.", error);
+    }
+  }
+
+  function saveCategoryNames() {
+    try {
+      localStorage.setItem(
+        "neuroLogicalCategoryNames",
+        JSON.stringify(categories)
+      );
+    } catch (error) {
+      console.warn("A kategórianevek mentése nem sikerült.", error);
+    }
+  }
+
+  function getCategoryName(categoryId) {
+    return categories[categoryId] || categoryId;
+  }
+
+  function createCategoryId(name) {
+    let base =
+      name
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+
+    if (!base) {
+      base = "kategoria";
+    }
+
+    let id = base;
+    let counter = 2;
+
+    while (
+      Object.prototype.hasOwnProperty.call(categories, id)
+    ) {
+      id = `${base}_${counter}`;
+      counter++;
+    }
+
+    return id;
+  }
+
+  function getAllCategoryIds() {
+    const ids = new Set(Object.keys(categories));
+
+    questionPool.forEach(question => {
+      if (question.category) {
+        ids.add(question.category);
+      }
+    });
+
+    return Array.from(ids);
+  }
+
+  function populateCategorySelectors() {
+    const ids = getAllCategoryIds();
+
+    const categorySelect =
+      document.getElementById("category");
+
+    const importSelect =
+      document.getElementById("importCategory");
+
+    const filterSelect =
+      document.getElementById("categoryFilter");
+
+    const currentCategory =
+      categorySelect.value || "retina";
+
+    const currentImportCategory =
+      importSelect.value || "retina";
+
+    const currentFilter =
+      filterSelect.value || "all";
+
+    categorySelect.innerHTML =
+      ids.map(id => `
+        <option value="${escapeAttribute(id)}">
+          ${escapeHTML(getCategoryName(id))}
+        </option>
+      `).join("");
+
+    importSelect.innerHTML =
+      ids.map(id => `
+        <option value="${escapeAttribute(id)}">
+          ${escapeHTML(getCategoryName(id))}
+        </option>
+      `).join("");
+
+    filterSelect.innerHTML =
+      `<option value="all">Összes témakör</option>` +
+      ids.map(id => `
+        <option value="${escapeAttribute(id)}">
+          ${escapeHTML(getCategoryName(id))}
+        </option>
+      `).join("");
+
+    categorySelect.value =
+      ids.includes(currentCategory)
+        ? currentCategory
+        : (ids[0] || "");
+
+    importSelect.value =
+      ids.includes(currentImportCategory)
+        ? currentImportCategory
+        : (ids[0] || "");
+
+    filterSelect.value =
+      currentFilter === "all" || ids.includes(currentFilter)
+        ? currentFilter
+        : "all";
+  }
+
+  function showNewCategoryInput() {
+    const row =
+      document.getElementById("newCategoryRow");
+
+    const input =
+      document.getElementById("newCategoryName");
+
+    row.classList.add("active");
+    input.value = "";
+    input.focus();
+  }
+
+  function hideNewCategoryInput() {
+    const row =
+      document.getElementById("newCategoryRow");
+
+    const input =
+      document.getElementById("newCategoryName");
+
+    row.classList.remove("active");
+    input.value = "";
+  }
+
+  function createCategory() {
+    const input =
+      document.getElementById("newCategoryName");
+
+    const name =
+      input.value.trim();
+
+    if (!name) {
+      showStatus(
+        "formStatus",
+        "Írd be az új kategória nevét.",
+        "error"
+      );
+      input.focus();
+      return;
+    }
+
+    const existingId =
+      Object.keys(categories).find(
+        id =>
+          categories[id].toLowerCase() ===
+          name.toLowerCase()
+      );
+
+    if (existingId) {
+      showStatus(
+        "formStatus",
+        "Ez a kategória már létezik.",
+        "error"
+      );
+      input.focus();
+      return;
+    }
+
+    const id = createCategoryId(name);
+
+    categories[id] = name;
+    saveCategoryNames();
+    populateCategorySelectors();
+
+    document.getElementById("category").value = id;
+    document.getElementById("importCategory").value = id;
+
+    hideNewCategoryInput();
+
+    showStatus(
+      "formStatus",
+      `Az új kategória létrejött: ${name}`,
+      "success"
+    );
+  }
 
 
   /*
@@ -614,6 +874,9 @@
 
   window.addEventListener("DOMContentLoaded", async () => {
 
+  loadSavedCategoryNames();
+  populateCategorySelectors();
+
   addOption();
   addOption();
   addOption();
@@ -631,6 +894,23 @@
 
     if (Array.isArray(existingQuestions)) {
       questionPool = existingQuestions;
+
+      questionPool.forEach(question => {
+        if (
+          question.category &&
+          !Object.prototype.hasOwnProperty.call(
+            categories,
+            question.category
+          )
+        ) {
+          categories[question.category] =
+            question.category.replace(/_/g, " ");
+        }
+      });
+
+      saveCategoryNames();
+      populateCategorySelectors();
+
     } else {
       throw new Error("A questions.json formátuma hibás.");
     }
@@ -1186,7 +1466,7 @@ function clearForm() {
   } else {
 
     count.textContent =
-      `${filteredQuestions.length} kérdés · ${categories[filter]}`;
+      `${filteredQuestions.length} kérdés · ${getCategoryName(filter)}`;
 
   }
 
@@ -1217,7 +1497,7 @@ function clearForm() {
 
             <div class="question-meta">
               ID: ${q.id}
-              · ${categories[q.category] || q.category}
+              · ${escapeHTML(getCategoryName(q.category))}
               · ${
                 q.type === "single"
                   ? "Egy helyes válasz"
