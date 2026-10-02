@@ -25,10 +25,13 @@
 
     /* ========== BASIC STYLES ========== */
     * { box-sizing: border-box; }
+    html {
+      background: transparent;
+    }
     body {
       font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
       margin: 0; padding: 0;
-      background-color: var(--bg);
+      background-color: transparent;
       color: var(--text);
       line-height: 1.5;
       transition: background-color 0.3s, color 0.3s;
@@ -209,7 +212,8 @@
 
     /* ========== LAYOUT MIMIC ========== */
     .quiz-container {
-      padding-bottom: 10px;
+      padding-top: 0;
+      padding-bottom: 0;
     }
     .quiz-layout {
       background-color: var(--surface);
@@ -217,7 +221,7 @@
       border-top: 5px solid var(--brand-600);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      margin: 20px 0 0;
+      margin: 0;
       padding: 24px 24px 16px;
     }
     .top-row {
