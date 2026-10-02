@@ -2,12 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Quiz Exam Practice Tool</title>
   <style>
+    /* ========== SZÍNPALETTA ==========
+       Ha megvan a neurological.hu pontos színkódja, elég ITT átírni
+       a változókat, a többi design automatikusan követi. */
+    :root {
+      --brand-900: #0a1f3d;      /* legsötétebb kék (fejléc, szöveg) */
+      --brand-700: #12386b;      /* sötétkék (gombok hover) */
+      --brand-600: #1a4f95;      /* fő márkakék */
+      --brand-500: #2a6fd1;      /* világosabb kiemelő kék */
+      --brand-100: #e4edf9;      /* halvány kék felület */
+      --bg: #f3f6fb;             /* oldal háttér */
+      --surface: #ffffff;        /* kártya háttér */
+      --text: #14243b;           /* fő szöveg */
+      --muted: #5b6b82;          /* halvány szöveg */
+      --border: #d3deee;         /* szegélyek */
+      --shadow: 0 6px 24px rgba(10, 31, 61, 0.08);
+      --radius: 12px;
+    }
+
     /* ========== BASIC STYLES ========== */
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
       margin: 0; padding: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
       transition: background-color 0.3s, color 0.3s;
     }
     header, .quiz-container, footer {
@@ -20,38 +43,122 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
+      padding-top: 24px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: var(--brand-900);
+      padding-left: 12px;
+      border-left: 4px solid var(--brand-500);
     }
     button {
       cursor: pointer;
-      padding: 8px 16px;
+      padding: 9px 18px;
       margin: 6px 0;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      background-color: var(--brand-600);
+      border: 1px solid var(--brand-600);
+      border-radius: 8px;
+      transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+    }
+    button:hover {
+      background-color: var(--brand-700);
+      border-color: var(--brand-700);
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(42, 111, 209, 0.45);
+      outline-offset: 2px;
+    }
+    #theme-toggle {
+      background-color: transparent;
+      color: var(--brand-600);
+      border: 1px solid var(--brand-600);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    #theme-toggle:hover {
+      background-color: var(--brand-100);
+      border-color: var(--brand-600);
     }
     .question {
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--brand-900);
       margin-top: 20px;
     }
+    .question pre, .option-item pre {
+      background-color: var(--brand-100);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      font-weight: 400;
+    }
     .options {
-      margin: 10px 0;
+      margin: 14px 0;
     }
     .option-item {
-      margin: 5px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 8px 0;
+      padding: 10px 14px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .option-item:hover {
+      border-color: var(--brand-500);
+      background-color: var(--brand-100);
+    }
+    .option-item:has(input:checked) {
+      border-color: var(--brand-600);
+      background-color: var(--brand-100);
+    }
+    .option-item input {
+      margin-top: 4px;
+      accent-color: var(--brand-600);
+      flex-shrink: 0;
+    }
+    .option-item label {
+      cursor: pointer;
+      flex: 1;
     }
     .feedback {
       text-align: center;
-      font-weight: bold;
+      font-weight: 600;
       margin-top: 10px;
-      padding: 10px;
+      padding: 12px;
+      border-radius: 10px;
       display: none;
     }
     /* feedback color states */
     .feedback.correct {
-      background-color: #c8e6c9; /* Light green */
+      background-color: #d7f0df; /* Light green */
+      color: #14532d;
+      border: 1px solid #9fd8b2;
     }
     .feedback.incorrect {
-      background-color: #ffcdd2; /* Light red */
+      background-color: #fde0e0; /* Light red */
+      color: #7f1d1d;
+      border: 1px solid #f1a8a8;
     }
     .feedback.partial {
-      background-color: #fff9c4; /* Light yellow */
+      background-color: #fff3cd; /* Light yellow */
+      color: #6b4e00;
+      border: 1px solid #f0d78a;
     }
     #next-btn, #check-btn {
       margin-right: 10px;
@@ -62,35 +169,71 @@
 
     /* ========== THEME STYLES ========== */
     .dark-mode {
-      background-color: #222;
-      color: #eee;
+      --bg: #071428;
+      --surface: #0e2240;
+      --text: #e6edf8;
+      --muted: #93a4be;
+      --border: #1f3a63;
+      --brand-100: #12294a;
+      --brand-900: #e6edf8;
+      --brand-600: #3b82e6;
+      --brand-700: #5b9af0;
+      --brand-500: #5b9af0;
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+      background-color: var(--bg);
+      color: var(--text);
+    }
+    .dark-mode button {
+      color: #04101f;
+    }
+    .dark-mode #theme-toggle {
+      color: var(--brand-600);
     }
     .dark-mode .feedback.correct {
-      background-color: #2e7d32;
+      background-color: #1f6b3a;
       color: #fff;
+      border-color: #2e8b50;
     }
     .dark-mode .feedback.incorrect {
-      background-color: #c62828;
+      background-color: #b32626;
       color: #fff;
+      border-color: #d24848;
     }
     .dark-mode .feedback.partial {
-      background-color: #fbc02d;
+      background-color: #e6b422;
       color: #000;
+      border-color: #f0c840;
     }
 
     /* ========== LAYOUT MIMIC ========== */
     .quiz-layout {
-      border: 1px solid #ccc;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--brand-600);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       margin-top: 20px;
-      padding: 20px;
+      padding: 24px;
     }
     .top-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
     }
     .timer {
-      font-weight: bold;
+      font-weight: 700;
+      color: var(--brand-600);
+      background-color: var(--brand-100);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    #questions-remaining {
+      font-weight: 700;
+      color: var(--brand-600);
     }
     .navigation-row {
       display: flex;
@@ -101,6 +244,28 @@
     .score-container {
       text-align: center;
       margin: 20px 0;
+      padding: 32px 20px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--brand-600);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .score-container h2 {
+      margin: 0 0 8px;
+      color: var(--brand-900);
+    }
+    #score-percent {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--brand-600);
+    }
+    footer {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer p {
+      color: var(--muted);
     }
   </style>
 </head>
@@ -412,33 +577,6 @@
     document.body.classList.toggle('dark-mode');
   });
 
-
-    /*
-    
-    MIT License
-
-Copyright (c) 2025 Veljko Vuckovic (refloow.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-    */
-    
   </script>
   
 </body>
