@@ -307,9 +307,9 @@
      ******************************************************/
     const config = {
       // total time in seconds
-      totalTime: 90,
+      totalTime: 600,
       // how many questions to pick
-      questionsToPick: 5
+      questionsToPick: 10
     };
 
     let questionPool = [];
@@ -560,7 +560,7 @@
     let minutes = Math.floor(timeRemaining / 60);
     let seconds = timeRemaining % 60;
     if (seconds < 10) seconds = '0' + seconds;
-    timerEl.textContent = `Time: ${minutes}:${seconds}`;
+    timerEl.textContent = `${minutes}:${seconds}`;
   }
 
   /******************************************************
