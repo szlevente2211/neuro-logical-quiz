@@ -209,7 +209,7 @@
 
     /* ========== LAYOUT MIMIC ========== */
     .quiz-container {
-      padding-bottom: 10px;
+      padding-bottom: 32px; /* hely az árnyéknak, hogy az iframe ne vágja le */
     }
     .quiz-layout {
       background-color: var(--surface);
@@ -583,13 +583,19 @@
    ******************************************************/
   function reportHeight() {
     if (window.parent === window) return; // nincs beágyazva
-    const height = document.body.offsetHeight;
+    const height = Math.ceil(Math.max(
+      document.body.getBoundingClientRect().height,
+      document.body.scrollHeight
+    ));
     window.parent.postMessage({ type: 'quiz-height', height: height }, '*');
   }
   if ('ResizeObserver' in window) {
     new ResizeObserver(reportHeight).observe(document.body);
   }
   window.addEventListener('load', reportHeight);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reportHeight);
+  }
   window.addEventListener('resize', reportHeight);
 
   /******************************************************
