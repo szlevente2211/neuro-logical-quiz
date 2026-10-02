@@ -1,29 +1,39 @@
 [
   {
+    "id": 1,
+    "category": "retina",
     "question": "Driving in ______ weather is dangerous due to lack of visibility.",
     "options": ["freezing", "foggy", "shiny", "rainy"],
     "correctAnswers": [1],
     "type": "single"
   },
   {
+    "id": 2,
+    "category": "latomezok",
     "question": "Which of the following are fruit?",
     "options": ["Carrot", "Apple", "Broccoli", "Strawberry", "Lemon"],
     "correctAnswers": [1, 3, 4],
     "type": "multiple"
   },
   {
+    "id": 3,
+    "category": "nervus_opticus",
     "question": "2 + 2 = ?",
     "options": ["3", "4", "5", "6"],
     "correctAnswers": [1],
     "type": "single"
   },
   {
+    "id": 4,
+    "category": "chiasma",
     "question": "Select all prime numbers:",
     "options": ["2", "3", "4", "8", "11"],
     "correctAnswers": [0, 1, 4],
     "type": "multiple"
   },
   {
+    "id": 5,
+    "category": "cgl",
     "question": "What color is the sky on a clear day?",
     "options": ["Blue", "Green", "Yellow", "Red"],
     "correctAnswers": [0],
