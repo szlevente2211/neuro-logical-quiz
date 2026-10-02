@@ -560,6 +560,568 @@
 
 
 
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroLogical – Kérdésbank szerkesztő</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 20px;
+      background: #f5f7fa;
+      color: #17263F;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .subtitle {
+      color: #5d6878;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    select,
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #ccd3dd;
+      border-radius: 7px;
+      font-size: 16px;
+      font-family: inherit;
+      background: white;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field {
+      margin-bottom: 22px;
+    }
+
+    .question-type {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .question-type label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .option-row input[type="text"] {
+      flex: 1;
+    }
+
+    .option-row button {
+      margin: 0;
+      padding: 8px 11px;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 11px 17px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #17263F;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .secondary {
+      background: #e8edf3;
+      color: #17263F;
+    }
+
+    .danger {
+      background: #b42318;
+      color: white;
+    }
+
+    .success {
+      background: #287a4b;
+      color: white;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .options-container {
+      margin-top: 10px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #687384;
+      margin-top: 6px;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 7px;
+      display: none;
+    }
+
+    .status.success-status {
+      display: block;
+      background: #e8f5ed;
+      color: #1f633d;
+    }
+
+    .status.error-status {
+      display: block;
+      background: #fdecec;
+      color: #9b1c1c;
+    }
+
+    pre {
+      background: #101820;
+      color: #e8edf3;
+      padding: 18px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+    }
+
+    .question-count {
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .question-item {
+      border: 1px solid #d9dee6;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fafbfd;
+    }
+
+    .question-meta {
+      font-size: 13px;
+      color: #687384;
+      margin-bottom: 6px;
+    }
+
+    .question-text {
+      font-weight: 600;
+    }
+
+    .import-format {
+      background: #f0f3f7;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+
+  .question-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 7px;
+  background: #e8edf3;
+  color: #17263F;
+  font-size: 18px;
+}
+
+.icon-button:hover {
+  background: #dce3ec;
+  opacity: 1;
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.editing-indicator {
+  display: none;
+  margin-bottom: 18px;
+  padding: 10px 13px;
+  border-radius: 7px;
+  background: #eef4ff;
+  color: #234b7c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.editing-indicator.active {
+  display: block;
+}  
+
+    
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 10px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .option-row {
+        align-items: stretch;
+      }
+
+      .option-row input[type="text"] {
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>NeuroLogical – Kérdésbank</h1>
+  <p class="subtitle">
+    Kérdések létrehozása, importálása és questions.json generálása
+  </p>
+
+
+  <!-- ========================================================= -->
+  <!-- KÉZI KÉRDÉS LÉTREHOZÁSA -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+   <h2>1. Új kérdés hozzáadása</h2>
+
+<div id="editingIndicator" class="editing-indicator">
+  ✎ Kérdés szerkesztése folyamatban
+</div>
+
+    <div class="field">
+      <label for="category">Témakör</label>
+
+      <select id="category">
+        <option value="retina">Retina</option>
+        <option value="latopalya">Látópálya</option>
+        <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
+        <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
+      </select>
+    </div>
+
+
+    <div class="field">
+
+      <label for="question">
+        Kérdés
+      </label>
+
+      <textarea
+        id="question"
+        placeholder="Írd ide a kérdés szövegét..."
+      ></textarea>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Kérdés típusa</label>
+
+      <div class="question-type">
+
+        <label>
+          <input
+            type="radio"
+            name="questionType"
+            value="single"
+            checked
+            onchange="updateOptionSelectors()"
+          />
+          Egy helyes válasz
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="questionType"
+            value="multiple"
+            onchange="updateOptionSelectors()"
+          />
+          Több helyes válasz
+        </label>
+
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Válaszlehetőségek</label>
+
+      <div class="hint">
+        Jelöld be a helyes választ vagy válaszokat.
+      </div>
+
+      <div id="optionsContainer" class="options-container"></div>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="addOption()"
+      >
+        + Válaszlehetőség
+      </button>
+
+    </div>
+
+
+    <div class="button-row">
+
+      <button
+  type="button"
+  id="saveQuestionButton"
+  class="success"
+  onclick="addQuestion()"
+>
+  Kérdés hozzáadása
+</button>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="clearForm()"
+      >
+        Űrlap törlése
+      </button>
+
+    </div>
+
+    <div id="formStatus" class="status"></div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- KÉRDÉSEK -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>2. Jelenlegi kérdések</h2>
+
+    <div id="questionCount" class="question-count">
+      0 kérdés
+    </div>
+
+    <div id="questionList" class="question-list">
+      <div class="hint">
+        Még nincs hozzáadott kérdés.
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- JSON EXPORT -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>3. questions.json</h2>
+
+    <p class="hint">
+      Az alábbi gombbal letöltheted a teljes kérdésbankot
+      <strong>questions.json</strong> fájlként.
+    </p>
+
+    <div class="button-row">
+
+      <button
+        type="button"
+        class="success"
+        onclick="downloadJSON()"
+      >
+        questions.json letöltése
+      </button>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="copyJSON()"
+      >
+        JSON másolása
+      </button>
+
+    </div>
+
+    <pre id="jsonOutput">[]</pre>
+
+    <div id="jsonStatus" class="status"></div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- SZÖVEGES / PDF IMPORT -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>4. Tömeges import szövegből</h2>
+
+    <p>
+      Ha PDF-ből vagy más dokumentumból sok kérdést másolsz ki,
+      itt továbbra is használhatod a korábbi konvertert.
+    </p>
+
+    <div class="import-format">
+1. Melyik struktúra található a retinában?
+
+• Ganglionsejtek
+• Pálcikák *
+• Bipoláris sejtek
+• Amacrin sejtek
+
+2. Mely állítások igazak a retinára?
+
+• A retina a központi idegrendszer része *
+• A retina csak fotoreceptorokból áll
+• A ganglionsejtek axonjai alkotják a nervus opticust *
+    </div>
+
+    <br>
+
+    <textarea
+      id="inputText"
+      placeholder="Ide másold be a kérdéseket..."
+    ></textarea>
+
+    <br><br>
+
+    <div class="field">
+
+      <label for="importCategory">
+        Az importált kérdések témaköre
+      </label>
+
+      <select id="importCategory">
+        <option value="retina">Retina</option>
+        <option value="latopalya">Látópálya</option>
+        <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
+        <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
+      </select>
+
+      <div class="hint">
+        A jelenlegi egyszerű import során minden beillesztett kérdés
+        ugyanabba a témakörbe kerül.
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="convertQuestions()"
+    >
+      Szöveg importálása
+    </button>
+
+    <div id="importStatus" class="status"></div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- MIT LICENSE -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <p class="hint">
+      This tool contains code adapted from Refloow Exam Quiz Test.
+      Original project © 2025 Veljko Vuckovic.
+      Licensed under the MIT License.
+    </p>
+
+  </div>
+
+</div>
+
+
+
 <script>
 
   /*
@@ -1724,5 +2286,7 @@ function clearForm() {
 
 </script>
 
+</body>
+</html>
 </body>
 </html>
