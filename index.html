@@ -106,7 +106,7 @@
       font-weight: 400;
     }
     .options {
-      margin: 14px 0;
+      margin: 14px 0 0;
     }
     .option-item {
       display: flex;
@@ -117,6 +117,7 @@
       background-color: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
+      cursor: pointer;
       transition: border-color 0.2s, background-color 0.2s;
     }
     .option-item:hover {
@@ -131,6 +132,7 @@
       margin-top: 4px;
       accent-color: var(--brand-600);
       flex-shrink: 0;
+      cursor: pointer;
     }
     .option-item label {
       cursor: pointer;
@@ -206,14 +208,17 @@
     }
 
     /* ========== LAYOUT MIMIC ========== */
+    .quiz-container {
+      padding-bottom: 10px;
+    }
     .quiz-layout {
       background-color: var(--surface);
       border: 1px solid var(--border);
       border-top: 5px solid var(--brand-600);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      margin-top: 20px;
-      padding: 24px;
+      margin: 20px 0 0;
+      padding: 24px 24px 16px;
     }
     .top-row {
       display: flex;
@@ -239,11 +244,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 12px;
+    }
+    .navigation-row button {
+      margin-bottom: 0;
     }
     .score-container {
       text-align: center;
-      margin: 20px 0;
+      margin: 20px 0 0;
       padding: 32px 20px;
       background-color: var(--surface);
       border: 1px solid var(--border);
@@ -436,6 +444,15 @@
 
       wrapper.appendChild(input);
       wrapper.appendChild(label);
+
+      // Az egész sorra kattintva is jelölje be/ki a választ
+      // (ha közvetlenül a négyzetre/körre kattintanak, azt a böngésző intézi)
+      wrapper.addEventListener('click', (e) => {
+        if (e.target !== input) {
+          input.click();
+        }
+      });
+
       optionsContainerEl.appendChild(wrapper);
     });
 
