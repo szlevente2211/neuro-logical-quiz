@@ -87,6 +87,10 @@
       font-size: 0.85rem;
       white-space: nowrap;
     }
+    #theme-toggle:hover {
+      background-color: var(--brand-100);
+      border-color: var(--brand-600);
+    }
     .question {
       font-weight: 700;
       font-size: 1.1rem;
@@ -573,11 +577,29 @@
   }
 
   /******************************************************
-   * 12) THEME TOGGLE
+   * 12) AUTOMATIKUS MAGASSÁG (beágyazott / iframe használathoz)
+   * Az oldal jelzi a szülő oldalnak, mekkora a tartalma,
+   * így a beágyazás nem marad nagyobb a kérdés-válasz blokknál.
    ******************************************************/
-  themeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-  });
+  function reportHeight() {
+    if (window.parent === window) return; // nincs beágyazva
+    const height = document.body.offsetHeight;
+    window.parent.postMessage({ type: 'quiz-height', height: height }, '*');
+  }
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(reportHeight).observe(document.body);
+  }
+  window.addEventListener('load', reportHeight);
+  window.addEventListener('resize', reportHeight);
+
+  /******************************************************
+   * 13) THEME TOGGLE
+   ******************************************************/
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+  }
 
   </script>
   
