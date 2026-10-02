@@ -21,6 +21,15 @@
       --border: #d3deee;         /* szegélyek */
       --shadow: 0 6px 24px rgba(10, 31, 61, 0.08);
       --radius: 12px;
+
+      /* --- A kérdés feletti kiemelő fejléc külön színei --- */
+      --header-stripe: #c9971f;      /* a kártya tetején lévő vastag csík */
+      --header-bg: transparent;      /* a fejléc sor háttere */
+      --header-text: #5b6b82;        /* "Hátralevő kérdések:" szöveg */
+      --header-count: #183353;       /* a hátralevő kérdések száma */
+      --header-line: #d3deee;        /* a fejléc alatti vékony vonal */
+      --header-timer-bg: #e4edf9;    /* az időzítő "pirula" háttere */
+      --header-timer-text: #183353;  /* az időzítő szövege */
     }
 
     /* ========== BASIC STYLES ========== */
@@ -182,6 +191,16 @@
       --brand-700: #5b9af0;
       --brand-500: #5b9af0;
       --shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+
+      /* kiemelő fejléc sötét módban */
+      --header-stripe: #3b82e6;
+      --header-bg: transparent;
+      --header-text: #93a4be;
+      --header-count: #3b82e6;
+      --header-line: #1f3a63;
+      --header-timer-bg: #12294a;
+      --header-timer-text: #3b82e6;
+
       background-color: var(--bg);
       color: var(--text);
     }
@@ -214,7 +233,7 @@
     .quiz-layout {
       background-color: var(--surface);
       border: 1px solid var(--border);
-      border-top: 5px solid var(--brand-600);
+      border-top: 5px solid var(--header-stripe);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       margin: 20px 0 0;
@@ -225,20 +244,21 @@
       justify-content: space-between;
       align-items: center;
       padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
+      border-bottom: 1px solid var(--header-line);
+      background-color: var(--header-bg);
+      color: var(--header-text);
       font-size: 0.9rem;
     }
     .timer {
       font-weight: 700;
-      color: var(--brand-600);
-      background-color: var(--brand-100);
+      color: var(--header-timer-text);
+      background-color: var(--header-timer-bg);
       padding: 4px 12px;
       border-radius: 999px;
     }
     #questions-remaining {
       font-weight: 700;
-      color: var(--brand-600);
+      color: var(--header-count);
     }
     .navigation-row {
       display: flex;
