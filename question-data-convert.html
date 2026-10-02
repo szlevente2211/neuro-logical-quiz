@@ -540,16 +540,44 @@
    * ============================================================
    */
 
-  window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("DOMContentLoaded", async () => {
 
-    addOption();
-    addOption();
-    addOption();
-    addOption();
+  addOption();
+  addOption();
+  addOption();
+  addOption();
 
-    updateDisplay();
+  try {
 
-  });
+    const response = await fetch("questions.json");
+
+    if (!response.ok) {
+      throw new Error("A questions.json nem tölthető be.");
+    }
+
+    const existingQuestions = await response.json();
+
+    if (Array.isArray(existingQuestions)) {
+      questionPool = existingQuestions;
+    } else {
+      throw new Error("A questions.json formátuma hibás.");
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    showStatus(
+      "formStatus",
+      "A meglévő kérdésbank nem tölthető be. Üres kérdésbankkal folytatjuk.",
+      "error"
+    );
+
+  }
+
+  updateDisplay();
+
+});
 
 
 
