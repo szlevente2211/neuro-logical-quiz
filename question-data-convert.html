@@ -417,11 +417,30 @@
 
     <h2>2. Jelenlegi kérdések</h2>
 
-    <div id="questionCount" class="question-count">
-      0 kérdés
-    </div>
+   <div class="field" style="margin-bottom: 15px;">
 
-    <div id="questionList" class="question-list">
+  <label for="categoryFilter">
+    Témakör szűrése
+  </label>
+
+  <select
+    id="categoryFilter"
+    onchange="updateDisplay()"
+  >
+    <option value="all">Összes témakör</option>
+    <option value="retina">Retina</option>
+    <option value="latopalya">Látópálya</option>
+    <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
+    <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
+  </select>
+
+</div>
+
+<div id="questionCount" class="question-count">
+  0 kérdés
+</div>
+
+<div id="questionList" class="question-list">
       <div class="hint">
         Még nincs hozzáadott kérdés.
       </div>
@@ -1133,92 +1152,119 @@ function clearForm() {
 
   function updateDisplay() {
 
-    const count =
-      document.getElementById("questionCount");
+  const count =
+    document.getElementById("questionCount");
+
+  const list =
+    document.getElementById("questionList");
+
+  const filter =
+    document.getElementById("categoryFilter").value;
+
+
+  /*
+   * SZŰRT KÉRDÉSEK
+   */
+
+  const filteredQuestions =
+    filter === "all"
+      ? questionPool
+      : questionPool.filter(
+          q => q.category === filter
+        );
+
+
+  /*
+   * DARABSZÁM
+   */
+
+  if (filter === "all") {
 
     count.textContent =
       `${questionPool.length} kérdés`;
 
+  } else {
 
-    const list =
-      document.getElementById("questionList");
-
-
-    if (questionPool.length === 0) {
-
-      list.innerHTML = `
-        <div class="hint">
-          Még nincs hozzáadott kérdés.
-        </div>
-      `;
-
-    } else {
-
-      list.innerHTML =
-        questionPool.map(q => {
-
-          return `
-            <div class="question-item">
-
-              <div class="question-meta">
-                ID: ${q.id}
-                · ${categories[q.category] || q.category}
-                · ${q.type === "single"
-                    ? "Egy helyes válasz"
-                    : "Több helyes válasz"}
-              </div>
-
-              <div class="question-text">
-                ${escapeHTML(q.question)}
-              </div>
-
-
-
-
-              <div class="question-actions">
-
-  <button
-    type="button"
-    class="icon-button"
-    title="Kérdés szerkesztése"
-    aria-label="Kérdés szerkesztése"
-    onclick="editQuestion(${q.id})"
-  >
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 20h9"></path>
-      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
-    </svg>
-  </button>
-
-  <button
-    type="button"
-    class="danger"
-    onclick="deleteQuestion(${q.id})"
-  >
-    Törlés
-  </button>
-
-</div>
-
-            </div>
-          `;
-
-        }).join("");
-
-    }
-
-
-    updateJSONOutput();
+    count.textContent =
+      `${filteredQuestions.length} kérdés · ${categories[filter]}`;
 
   }
+
+
+  /*
+   * HA NINCS KÉRDÉS
+   */
+
+  if (filteredQuestions.length === 0) {
+
+    list.innerHTML = `
+      <div class="hint">
+        Ebben a témakörben még nincs kérdés.
+      </div>
+    `;
+
+  } else {
+
+    /*
+     * KÉRDÉSEK MEGJELENÍTÉSE
+     */
+
+    list.innerHTML =
+      filteredQuestions.map(q => {
+
+        return `
+          <div class="question-item">
+
+            <div class="question-meta">
+              ID: ${q.id}
+              · ${categories[q.category] || q.category}
+              · ${
+                q.type === "single"
+                  ? "Egy helyes válasz"
+                  : "Több helyes válasz"
+              }
+            </div>
+
+            <div class="question-text">
+              ${escapeHTML(q.question)}
+            </div>
+
+            <br>
+
+            <div class="button-row">
+
+              <button
+                type="button"
+                onclick="editQuestion(${q.id})"
+              >
+                Szerkesztés
+              </button>
+
+              <button
+                type="button"
+                class="danger"
+                onclick="deleteQuestion(${q.id})"
+              >
+                Törlés
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
+
+  /*
+   * JSON FRISSÍTÉSE
+   */
+
+  updateJSONOutput();
+
+}
 
 
 
