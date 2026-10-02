@@ -125,6 +125,11 @@
       color: white;
     }
 
+    .danger:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
     .success {
       background: #287a4b;
       color: white;
@@ -290,6 +295,79 @@
 .editing-indicator.active {
   display: block;
 }  
+
+    /* ========================================================= */
+    /* ÖSSZECSUKHATÓ BLOKKOK */
+    /* ========================================================= */
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .card-header h2 {
+      margin: 0;
+    }
+
+    .toggle-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .toggle-arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    .collapsible.collapsed .toggle-arrow {
+      transform: rotate(-90deg);
+    }
+
+    .collapsible-body {
+      margin-top: 20px;
+    }
+
+    .collapsible.collapsed .collapsible-body {
+      display: none;
+    }
+
+    .list-toolbar {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .list-toolbar .field {
+      flex: 1;
+      min-width: 220px;
+      margin-bottom: 0;
+    }
+
+    .list-toolbar .delete-all-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 600px) {
+      .list-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .list-toolbar .field {
+        min-width: 0;
+      }
+    }
 
     
 
@@ -475,33 +553,77 @@
   <!-- KÉRDÉSEK -->
   <!-- ========================================================= -->
 
-  <div class="card">
+  <div class="card collapsible" id="questionsCard">
 
-    <h2>2. Jelenlegi kérdések</h2>
+    <div class="card-header" onclick="toggleSection('questionsCard')">
 
-   <div class="field" style="margin-bottom: 15px;">
+      <h2>2. Jelenlegi kérdések</h2>
 
-  <label for="categoryFilter">
-    Témakör szűrése
-  </label>
+      <button
+        type="button"
+        class="secondary toggle-button"
+        id="questionsCardToggle"
+        aria-expanded="true"
+        aria-controls="questionsCardBody"
+        onclick="event.stopPropagation(); toggleSection('questionsCard')"
+      >
+        <span class="toggle-arrow">▼</span>
+        <span class="toggle-label">Becsukás</span>
+      </button>
 
-  <select
-    id="categoryFilter"
-    onchange="updateDisplay()"
-  >
-    <option value="all">Összes témakör</option>
-  </select>
+    </div>
 
-</div>
+    <div class="collapsible-body" id="questionsCardBody">
 
-<div id="questionCount" class="question-count">
-  0 kérdés
-</div>
+      <div class="list-toolbar">
 
-<div id="questionList" class="question-list">
-      <div class="hint">
-        Még nincs hozzáadott kérdés.
+        <div class="field">
+
+          <label for="categoryFilter">
+            Témakör szűrése
+          </label>
+
+          <select
+            id="categoryFilter"
+            onchange="updateDisplay()"
+          >
+            <option value="all">Összes témakör</option>
+          </select>
+
+        </div>
+
+        <div class="delete-all-wrap">
+
+          <button
+            type="button"
+            class="danger"
+            id="deleteAllButton"
+            onclick="deleteAllQuestionsInCategory()"
+            disabled
+          >
+            Összes kérdés törlése
+          </button>
+
+        </div>
+
       </div>
+
+      <div id="deleteAllHint" class="hint" style="margin-top: 0; margin-bottom: 15px;">
+        Az „Összes kérdés törlése” gombhoz válassz ki egy konkrét témakört a szűrőben.
+      </div>
+
+      <div id="listStatus" class="status" style="margin-top: 0; margin-bottom: 15px;"></div>
+
+      <div id="questionCount" class="question-count">
+        0 kérdés
+      </div>
+
+      <div id="questionList" class="question-list">
+        <div class="hint">
+          Még nincs hozzáadott kérdés.
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -512,38 +634,58 @@
   <!-- JSON EXPORT -->
   <!-- ========================================================= -->
 
-  <div class="card">
+  <div class="card collapsible" id="jsonCard">
 
-    <h2>3. questions.json</h2>
+    <div class="card-header" onclick="toggleSection('jsonCard')">
 
-    <p class="hint">
-      Az alábbi gombbal letöltheted a teljes kérdésbankot
-      <strong>questions.json</strong> fájlként.
-    </p>
-
-    <div class="button-row">
+      <h2>3. questions.json</h2>
 
       <button
         type="button"
-        class="success"
-        onclick="downloadJSON()"
+        class="secondary toggle-button"
+        id="jsonCardToggle"
+        aria-expanded="true"
+        aria-controls="jsonCardBody"
+        onclick="event.stopPropagation(); toggleSection('jsonCard')"
       >
-        questions.json letöltése
-      </button>
-
-      <button
-        type="button"
-        class="secondary"
-        onclick="copyJSON()"
-      >
-        JSON másolása
+        <span class="toggle-arrow">▼</span>
+        <span class="toggle-label">Becsukás</span>
       </button>
 
     </div>
 
-    <pre id="jsonOutput">[]</pre>
+    <div class="collapsible-body" id="jsonCardBody">
 
-    <div id="jsonStatus" class="status"></div>
+      <p class="hint" style="margin-top: 0;">
+        Az alábbi gombbal letöltheted a teljes kérdésbankot
+        <strong>questions.json</strong> fájlként.
+      </p>
+
+      <div class="button-row">
+
+        <button
+          type="button"
+          class="success"
+          onclick="downloadJSON()"
+        >
+          questions.json letöltése
+        </button>
+
+        <button
+          type="button"
+          class="secondary"
+          onclick="copyJSON()"
+        >
+          JSON másolása
+        </button>
+
+      </div>
+
+      <pre id="jsonOutput">[]</pre>
+
+      <div id="jsonStatus" class="status"></div>
+
+    </div>
 
   </div>
 
@@ -863,6 +1005,48 @@
 
   let questionPool = [];
   let editingQuestionId = null;
+
+
+
+  /*
+   * ============================================================
+   * ÖSSZECSUKHATÓ BLOKKOK
+   * ============================================================
+   */
+
+  function toggleSection(cardId) {
+
+    const card =
+      document.getElementById(cardId);
+
+    const toggle =
+      document.getElementById(cardId + "Toggle");
+
+    if (!card) {
+      return;
+    }
+
+    const collapsed =
+      card.classList.toggle("collapsed");
+
+    if (toggle) {
+
+      toggle.setAttribute(
+        "aria-expanded",
+        collapsed ? "false" : "true"
+      );
+
+      const label =
+        toggle.querySelector(".toggle-label");
+
+      if (label) {
+        label.textContent =
+          collapsed ? "Kinyitás" : "Becsukás";
+      }
+
+    }
+
+  }
 
 
 
@@ -1292,7 +1476,7 @@ function clearForm() {
   
 /*
    * ============================================================
-   * KÉRDÉS TÖRLÉSE
+   * KÉRDÉS SZERKESZTÉSE
    * ============================================================
    */
 
@@ -1426,6 +1610,95 @@ function clearForm() {
 
   /*
    * ============================================================
+   * ÖSSZES KÉRDÉS TÖRLÉSE A KIVÁLASZTOTT TÉMAKÖRBEN
+   * ============================================================
+   */
+
+  function deleteAllQuestionsInCategory() {
+
+    const filter =
+      document.getElementById("categoryFilter").value;
+
+    if (filter === "all") {
+
+      showStatus(
+        "listStatus",
+        "Először válassz ki egy konkrét témakört a szűrőben.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const categoryName =
+      getCategoryName(filter);
+
+    const toDelete =
+      questionPool.filter(
+        q => q.category === filter
+      );
+
+    if (toDelete.length === 0) {
+
+      showStatus(
+        "listStatus",
+        `A(z) „${categoryName}” témakörben nincs törölhető kérdés.`,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const confirmed =
+      confirm(
+        `Biztosan törlöd az összes kérdést (${toDelete.length} db) a(z) „${categoryName}” témakörből?\n\nEz a művelet nem vonható vissza.`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    /*
+     * HA A SZERKESZTETT KÉRDÉS TÖRLŐDIK, AZ ŰRLAPOT IS VISSZAÁLLÍTJUK
+     */
+
+    if (editingQuestionId !== null) {
+
+      const editedIsDeleted =
+        toDelete.some(
+          q => Number(q.id) === Number(editingQuestionId)
+        );
+
+      if (editedIsDeleted) {
+        clearForm();
+      }
+
+    }
+
+
+    questionPool = questionPool.filter(
+      q => q.category !== filter
+    );
+
+    updateDisplay();
+
+    showStatus(
+      "listStatus",
+      `${toDelete.length} kérdés törölve a(z) „${categoryName}” témakörből.`,
+      "success"
+    );
+
+  }
+
+
+
+  /*
+   * ============================================================
    * KÉRDÉSEK MEGJELENÍTÉSE
    * ============================================================
    */
@@ -1467,6 +1740,31 @@ function clearForm() {
 
     count.textContent =
       `${filteredQuestions.length} kérdés · ${getCategoryName(filter)}`;
+
+  }
+
+
+  /*
+   * ÖSSZES KÉRDÉS TÖRLÉSE GOMB ÁLLAPOTA
+   */
+
+  const deleteAllButton =
+    document.getElementById("deleteAllButton");
+
+  const deleteAllHint =
+    document.getElementById("deleteAllHint");
+
+  if (deleteAllButton) {
+
+    deleteAllButton.disabled =
+      filter === "all" || filteredQuestions.length === 0;
+
+  }
+
+  if (deleteAllHint) {
+
+    deleteAllHint.style.display =
+      filter === "all" ? "block" : "none";
 
   }
 
