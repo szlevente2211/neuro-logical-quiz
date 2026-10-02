@@ -1,145 +1,1428 @@
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 <head>
   <meta charset="UTF-8" />
-  <title>PDF Question Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroLogical – Kérdésbank szerkesztő</title>
+
   <style>
-    body {
-      margin: 20px;
-      font-family: sans-serif;
+    * {
+      box-sizing: border-box;
     }
+
+    body {
+      margin: 0;
+      padding: 30px 20px;
+      background: #f5f7fa;
+      color: #17263F;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .subtitle {
+      color: #5d6878;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    select,
+    input[type="text"],
     textarea {
       width: 100%;
-      height: 200px;
+      padding: 11px 12px;
+      border: 1px solid #ccd3dd;
+      border-radius: 7px;
+      font-size: 16px;
+      font-family: inherit;
+      background: white;
     }
-    pre {
-      background: #f0f0f0;
-      padding: 10px;
-      white-space: pre-wrap;
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
     }
-    button {
-      margin: 10px 0;
-      padding: 8px 16px;
+
+    .field {
+      margin-bottom: 22px;
+    }
+
+    .question-type {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .question-type label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 7px;
       cursor: pointer;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .option-row input[type="text"] {
+      flex: 1;
+    }
+
+    .option-row button {
+      margin: 0;
+      padding: 8px 11px;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 11px 17px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #17263F;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .secondary {
+      background: #e8edf3;
+      color: #17263F;
+    }
+
+    .danger {
+      background: #b42318;
+      color: white;
+    }
+
+    .success {
+      background: #287a4b;
+      color: white;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .options-container {
+      margin-top: 10px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #687384;
+      margin-top: 6px;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 7px;
+      display: none;
+    }
+
+    .status.success-status {
+      display: block;
+      background: #e8f5ed;
+      color: #1f633d;
+    }
+
+    .status.error-status {
+      display: block;
+      background: #fdecec;
+      color: #9b1c1c;
+    }
+
+    pre {
+      background: #101820;
+      color: #e8edf3;
+      padding: 18px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+    }
+
+    .question-count {
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .question-item {
+      border: 1px solid #d9dee6;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fafbfd;
+    }
+
+    .question-meta {
+      font-size: 13px;
+      color: #687384;
+      margin-bottom: 6px;
+    }
+
+    .question-text {
+      font-weight: 600;
+    }
+
+    .import-format {
+      background: #f0f3f7;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 10px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .option-row {
+        align-items: stretch;
+      }
+
+      .option-row input[type="text"] {
+        min-width: 0;
+      }
     }
   </style>
 </head>
+
 <body>
-  <h2>Paste your question text here:</h2>
-  <textarea id="inputText"></textarea>
-  <br />
-  <button onclick="convertQuestions()">Convert to questionPool</button>
-  <h3>Output (JS data):</h3>
-  <pre id="output"></pre>
-  
-  <script>
-    function convertQuestions() {
-      const input = document.getElementById('inputText').value;
-      const lines = input.split('\n').filter(line => line.trim() !== ''); // Keep non-empty lines without trimming
 
-      const questionPool = [];
-      let currentQuestion = null;
-      let inMultilineQuestion = false;
-      let accumulatedQuestionParts = [];
+<div class="container">
 
-      function finalizeQuestion() {
-        if (!currentQuestion) return;
-        if (currentQuestion.correctAnswers.length === 1) {
-          currentQuestion.type = "single";
-        } else {
-          currentQuestion.type = "multiple";
-        }
-        questionPool.push(currentQuestion);
+  <h1>NeuroLogical – Kérdésbank</h1>
+  <p class="subtitle">
+    Kérdések létrehozása, importálása és questions.json generálása
+  </p>
+
+
+  <!-- ========================================================= -->
+  <!-- KÉZI KÉRDÉS LÉTREHOZÁSA -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>1. Új kérdés hozzáadása</h2>
+
+    <div class="field">
+      <label for="category">Témakör</label>
+
+      <select id="category">
+        <option value="retina">Retina</option>
+        <option value="latopalya">Látópálya</option>
+        <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
+        <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
+      </select>
+    </div>
+
+
+    <div class="field">
+
+      <label for="question">
+        Kérdés
+      </label>
+
+      <textarea
+        id="question"
+        placeholder="Írd ide a kérdés szövegét..."
+      ></textarea>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Kérdés típusa</label>
+
+      <div class="question-type">
+
+        <label>
+          <input
+            type="radio"
+            name="questionType"
+            value="single"
+            checked
+            onchange="updateOptionSelectors()"
+          />
+          Egy helyes válasz
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="questionType"
+            value="multiple"
+            onchange="updateOptionSelectors()"
+          />
+          Több helyes válasz
+        </label>
+
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Válaszlehetőségek</label>
+
+      <div class="hint">
+        Jelöld be a helyes választ vagy válaszokat.
+      </div>
+
+      <div id="optionsContainer" class="options-container"></div>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="addOption()"
+      >
+        + Válaszlehetőség
+      </button>
+
+    </div>
+
+
+    <div class="button-row">
+
+      <button
+        type="button"
+        class="success"
+        onclick="addQuestion()"
+      >
+        Kérdés hozzáadása
+      </button>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="clearForm()"
+      >
+        Űrlap törlése
+      </button>
+
+    </div>
+
+    <div id="formStatus" class="status"></div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- KÉRDÉSEK -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>2. Jelenlegi kérdések</h2>
+
+    <div id="questionCount" class="question-count">
+      0 kérdés
+    </div>
+
+    <div id="questionList" class="question-list">
+      <div class="hint">
+        Még nincs hozzáadott kérdés.
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- JSON EXPORT -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>3. questions.json</h2>
+
+    <p class="hint">
+      Az alábbi gombbal letöltheted a teljes kérdésbankot
+      <strong>questions.json</strong> fájlként.
+    </p>
+
+    <div class="button-row">
+
+      <button
+        type="button"
+        class="success"
+        onclick="downloadJSON()"
+      >
+        questions.json letöltése
+      </button>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="copyJSON()"
+      >
+        JSON másolása
+      </button>
+
+    </div>
+
+    <pre id="jsonOutput">[]</pre>
+
+    <div id="jsonStatus" class="status"></div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- SZÖVEGES / PDF IMPORT -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <h2>4. Tömeges import szövegből</h2>
+
+    <p>
+      Ha PDF-ből vagy más dokumentumból sok kérdést másolsz ki,
+      itt továbbra is használhatod a korábbi konvertert.
+    </p>
+
+    <div class="import-format">
+1. Melyik struktúra található a retinában?
+
+• Ganglionsejtek
+• Pálcikák *
+• Bipoláris sejtek
+• Amacrin sejtek
+
+2. Mely állítások igazak a retinára?
+
+• A retina a központi idegrendszer része *
+• A retina csak fotoreceptorokból áll
+• A ganglionsejtek axonjai alkotják a nervus opticust *
+    </div>
+
+    <br>
+
+    <textarea
+      id="inputText"
+      placeholder="Ide másold be a kérdéseket..."
+    ></textarea>
+
+    <br><br>
+
+    <div class="field">
+
+      <label for="importCategory">
+        Az importált kérdések témaköre
+      </label>
+
+      <select id="importCategory">
+        <option value="retina">Retina</option>
+        <option value="latopalya">Látópálya</option>
+        <option value="kergi_feldolgozas">Kérgi feldolgozás</option>
+        <option value="nem_tudatos_palyak">Nem tudatos pályák</option>
+      </select>
+
+      <div class="hint">
+        A jelenlegi egyszerű import során minden beillesztett kérdés
+        ugyanabba a témakörbe kerül.
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="convertQuestions()"
+    >
+      Szöveg importálása
+    </button>
+
+    <div id="importStatus" class="status"></div>
+
+  </div>
+
+
+
+  <!-- ========================================================= -->
+  <!-- MIT LICENSE -->
+  <!-- ========================================================= -->
+
+  <div class="card">
+
+    <p class="hint">
+      This tool contains code adapted from Refloow Exam Quiz Test.
+      Original project © 2025 Veljko Vuckovic.
+      Licensed under the MIT License.
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+  /*
+   * ============================================================
+   * KATEGÓRIÁK
+   * ============================================================
+   */
+
+  const categories = {
+    retina: "Retina",
+    latopalya: "Látópálya",
+    kergi_feldolgozas: "Kérgi feldolgozás",
+    nem_tudatos_palyak: "Nem tudatos pályák"
+  };
+
+
+  /*
+   * ============================================================
+   * KÉRDÉSBANK
+   * ============================================================
+   */
+
+  let questionPool = [];
+
+
+
+  /*
+   * ============================================================
+   * KEZDŐ FORM
+   * ============================================================
+   */
+
+  window.addEventListener("DOMContentLoaded", () => {
+
+    addOption();
+    addOption();
+    addOption();
+    addOption();
+
+    updateDisplay();
+
+  });
+
+
+
+  /*
+   * ============================================================
+   * ID GENERÁLÁS
+   * ============================================================
+   */
+
+  function generateId() {
+
+    if (questionPool.length === 0) {
+      return 1;
+    }
+
+    const ids = questionPool
+      .map(q => Number(q.id))
+      .filter(id => Number.isFinite(id));
+
+    if (ids.length === 0) {
+      return 1;
+    }
+
+    return Math.max(...ids) + 1;
+  }
+
+
+
+  /*
+   * ============================================================
+   * KÉRDÉS TÍPUS
+   * ============================================================
+   */
+
+  function getQuestionType() {
+
+    return document.querySelector(
+      'input[name="questionType"]:checked'
+    ).value;
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * VÁLASZLEHETŐSÉG HOZZÁADÁSA
+   * ============================================================
+   */
+
+  function addOption(value = "", isCorrect = false) {
+
+    const container =
+      document.getElementById("optionsContainer");
+
+    const row = document.createElement("div");
+
+    row.className = "option-row";
+
+    row.innerHTML = `
+      <input
+        type="checkbox"
+        class="correct-option"
+        ${isCorrect ? "checked" : ""}
+      >
+
+      <input
+        type="text"
+        class="option-input"
+        placeholder="Válaszlehetőség"
+        value="${escapeAttribute(value)}"
+      >
+
+      <button
+        type="button"
+        class="danger"
+        onclick="this.parentElement.remove()"
+      >
+        ×
+      </button>
+    `;
+
+    container.appendChild(row);
+
+    updateOptionSelectors();
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * SINGLE / MULTIPLE KEZELÉSE
+   * ============================================================
+   */
+
+  function updateOptionSelectors() {
+
+    const type = getQuestionType();
+
+    const checkboxes =
+      document.querySelectorAll(".correct-option");
+
+    checkboxes.forEach((checkbox, index) => {
+
+      if (type === "single") {
+
+        checkbox.type = "radio";
+        checkbox.name = "singleCorrect";
+
+      } else {
+
+        checkbox.type = "checkbox";
+        checkbox.name = "multipleCorrect";
+
       }
 
-      const questionRegex = /^\s*\d+\.\s+(.*)/; // Allows leading whitespace before question number
+    });
 
-      lines.forEach(line => {
-        const questionMatch = line.match(questionRegex);
+  }
 
-        if (questionMatch) {
-          finalizeQuestion();
-          currentQuestion = {
-            question: '',
-            options: [],
-            correctAnswers: []
-          };
-          const questionText = questionMatch[1];
-          if (questionText.trim().startsWith('<q>')) {
-            inMultilineQuestion = true;
-            let content = questionText.trim().slice(3); // Remove '<q>'
-            const endIdx = content.indexOf('</q>');
-            if (endIdx !== -1) {
-              currentQuestion.question = content.slice(0, endIdx).trim();
-              inMultilineQuestion = false;
-            } else {
-              accumulatedQuestionParts = [content];
-            }
-          } else {
-            currentQuestion.question = questionText.trim();
-          }
-        } else if (currentQuestion) {
-          if (inMultilineQuestion) {
-            const endIdx = line.indexOf('</q>');
-            if (endIdx !== -1) {
-              const content = line.substring(0, endIdx).trim();
-              accumulatedQuestionParts.push(content);
-              currentQuestion.question = accumulatedQuestionParts.join('\n');
-              inMultilineQuestion = false;
-            } else {
-              accumulatedQuestionParts.push(line.trim());
-            }
-          } else {
-            // Process answer options
-            let answerText = line.replace(/^\s*•\s*/, '').trim();
-            let starIndex = answerText.indexOf('*');
-            let isCorrect = false;
-            if (starIndex >= 0) {
-              isCorrect = true;
-              answerText = answerText.substring(0, starIndex).trim();
-            }
-            const optionIndex = currentQuestion.options.length;
-            currentQuestion.options.push(answerText);
-            if (isCorrect) {
-              currentQuestion.correctAnswers.push(optionIndex);
-            }
-          }
+
+
+  /*
+   * ============================================================
+   * KÉRDÉS HOZZÁADÁSA
+   * ============================================================
+   */
+
+  function addQuestion() {
+
+    const category =
+      document.getElementById("category").value;
+
+    const question =
+      document.getElementById("question").value.trim();
+
+    const type = getQuestionType();
+
+    const rows =
+      document.querySelectorAll(".option-row");
+
+    const options = [];
+    const correctAnswers = [];
+
+    rows.forEach((row, index) => {
+
+      const input =
+        row.querySelector(".option-input");
+
+      const checkbox =
+        row.querySelector(".correct-option");
+
+      const text = input.value.trim();
+
+      if (text !== "") {
+
+        const optionIndex = options.length;
+
+        options.push(text);
+
+        if (checkbox.checked) {
+          correctAnswers.push(optionIndex);
         }
-      });
 
-      finalizeQuestion();
+      }
 
-      const outputEl = document.getElementById('output');
-      outputEl.textContent = "const questionPool = " + JSON.stringify(questionPool, null, 2) + ";";
+    });
+
+
+    /*
+     * VALIDÁCIÓ
+     */
+
+    if (!question) {
+
+      showStatus(
+        "formStatus",
+        "Írd be a kérdés szövegét.",
+        "error"
+      );
+
+      return;
     }
 
 
+    if (options.length < 2) {
+
+      showStatus(
+        "formStatus",
+        "Legalább két válaszlehetőség szükséges.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (correctAnswers.length === 0) {
+
+      showStatus(
+        "formStatus",
+        "Legalább egy helyes választ jelölj meg.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      type === "single" &&
+      correctAnswers.length !== 1
+    ) {
+
+      showStatus(
+        "formStatus",
+        "Az egyválaszos kérdéshez pontosan egy helyes választ jelölj meg.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /*
+     * KÉRDÉS LÉTREHOZÁSA
+     */
+
+    const newQuestion = {
+
+      id: generateId(),
+
+      category: category,
+
+      question: question,
+
+      options: options,
+
+      correctAnswers: correctAnswers,
+
+      type: type
+
+    };
+
+
+    questionPool.push(newQuestion);
+
+
+    clearForm();
+
+    updateDisplay();
+
+
+    showStatus(
+      "formStatus",
+      "A kérdés sikeresen hozzáadva.",
+      "success"
+    );
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * ŰRLAP TÖRLÉSE
+   * ============================================================
+   */
+
+  function clearForm() {
+
+    document.getElementById("question").value = "";
+
+    const container =
+      document.getElementById("optionsContainer");
+
+    container.innerHTML = "";
+
+    addOption();
+    addOption();
+    addOption();
+    addOption();
+
+    document.querySelector(
+      'input[name="questionType"][value="single"]'
+    ).checked = true;
+
+    updateOptionSelectors();
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * KÉRDÉS TÖRLÉSE
+   * ============================================================
+   */
+
+  function deleteQuestion(id) {
+
+    const confirmed =
+      confirm("Biztosan törlöd ezt a kérdést?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    questionPool =
+      questionPool.filter(q => q.id !== id);
+
+    updateDisplay();
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * KÉRDÉSEK MEGJELENÍTÉSE
+   * ============================================================
+   */
+
+  function updateDisplay() {
+
+    const count =
+      document.getElementById("questionCount");
+
+    count.textContent =
+      `${questionPool.length} kérdés`;
+
+
+    const list =
+      document.getElementById("questionList");
+
+
+    if (questionPool.length === 0) {
+
+      list.innerHTML = `
+        <div class="hint">
+          Még nincs hozzáadott kérdés.
+        </div>
+      `;
+
+    } else {
+
+      list.innerHTML =
+        questionPool.map(q => {
+
+          return `
+            <div class="question-item">
+
+              <div class="question-meta">
+                ID: ${q.id}
+                · ${categories[q.category] || q.category}
+                · ${q.type === "single"
+                    ? "Egy helyes válasz"
+                    : "Több helyes válasz"}
+              </div>
+
+              <div class="question-text">
+                ${escapeHTML(q.question)}
+              </div>
+
+              <br>
+
+              <button
+                type="button"
+                class="danger"
+                onclick="deleteQuestion(${q.id})"
+              >
+                Törlés
+              </button>
+
+            </div>
+          `;
+
+        }).join("");
+
+    }
+
+
+    updateJSONOutput();
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * JSON FRISSÍTÉSE
+   * ============================================================
+   */
+
+  function updateJSONOutput() {
+
+    const output =
+      document.getElementById("jsonOutput");
+
+    output.textContent =
+      JSON.stringify(questionPool, null, 2);
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * JSON LETÖLTÉS
+   * ============================================================
+   */
+
+  function downloadJSON() {
+
+    if (questionPool.length === 0) {
+
+      showStatus(
+        "jsonStatus",
+        "A kérdésbank üres.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const json =
+      JSON.stringify(questionPool, null, 2);
+
+    const blob =
+      new Blob(
+        [json],
+        { type: "application/json" }
+      );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+    a.download = "questions.json";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+
+    showStatus(
+      "jsonStatus",
+      "A questions.json letöltése elindult.",
+      "success"
+    );
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * JSON MÁSOLÁS
+   * ============================================================
+   */
+
+  async function copyJSON() {
+
+    const json =
+      JSON.stringify(questionPool, null, 2);
+
+    try {
+
+      await navigator.clipboard.writeText(json);
+
+      showStatus(
+        "jsonStatus",
+        "A JSON sikeresen a vágólapra került.",
+        "success"
+      );
+
+    } catch (error) {
+
+      showStatus(
+        "jsonStatus",
+        "A másolás nem sikerült. Másold ki kézzel a lenti mezőből.",
+        "error"
+      );
+
+    }
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * RÉGI SZÖVEGES IMPORT
+   * ============================================================
+   */
+
+  function convertQuestions() {
+
+    const input =
+      document.getElementById("inputText").value;
+
+    const importCategory =
+      document.getElementById("importCategory").value;
+
+
+    if (!input.trim()) {
+
+      showStatus(
+        "importStatus",
+        "Nincs beillesztett szöveg.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const lines =
+      input
+        .split("\n")
+        .filter(line => line.trim() !== "");
+
+
+    const importedQuestions = [];
+
+    let currentQuestion = null;
+
+    let inMultilineQuestion = false;
+
+    let accumulatedQuestionParts = [];
+
+
+    function finalizeQuestion() {
+
+      if (!currentQuestion) {
+        return;
+      }
+
+
+      if (
+        currentQuestion.correctAnswers.length === 1
+      ) {
+
+        currentQuestion.type = "single";
+
+      } else {
+
+        currentQuestion.type = "multiple";
+
+      }
+
+
+      currentQuestion.id = generateId();
+
+      currentQuestion.category =
+        importCategory;
+
+
+      importedQuestions.push(
+        currentQuestion
+      );
+
+    }
+
+
+    const questionRegex =
+      /^\s*\d+\.\s+(.*)/;
+
+
+    lines.forEach(line => {
+
+      const questionMatch =
+        line.match(questionRegex);
+
+
+      if (questionMatch) {
+
+        finalizeQuestion();
+
+
+        currentQuestion = {
+
+          id: null,
+
+          category: importCategory,
+
+          question: "",
+
+          options: [],
+
+          correctAnswers: [],
+
+          type: "single"
+
+        };
+
+
+        const questionText =
+          questionMatch[1];
+
+
+        if (
+          questionText
+            .trim()
+            .startsWith("<q>")
+        ) {
+
+          inMultilineQuestion = true;
+
+
+          let content =
+            questionText
+              .trim()
+              .slice(3);
+
+
+          const endIdx =
+            content.indexOf("</q>");
+
+
+          if (endIdx !== -1) {
+
+            currentQuestion.question =
+              content
+                .slice(0, endIdx)
+                .trim();
+
+            inMultilineQuestion = false;
+
+          } else {
+
+            accumulatedQuestionParts =
+              [content];
+
+          }
+
+        } else {
+
+          currentQuestion.question =
+            questionText.trim();
+
+        }
+
+      }
+
+      else if (currentQuestion) {
+
+
         /*
-    
-    MIT License
+         * TÖBBSOROS KÉRDÉS
+         */
 
-Copyright (c) 2025 Veljko Vuckovic (refloow.com)
+        if (inMultilineQuestion) {
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+          const endIdx =
+            line.indexOf("</q>");
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+          if (endIdx !== -1) {
 
-    */
-    
-  </script>
+            const content =
+              line
+                .substring(0, endIdx)
+                .trim();
+
+            accumulatedQuestionParts.push(
+              content
+            );
+
+            currentQuestion.question =
+              accumulatedQuestionParts.join("\n");
+
+            inMultilineQuestion = false;
+
+          } else {
+
+            accumulatedQuestionParts.push(
+              line.trim()
+            );
+
+          }
+
+        }
+
+
+        /*
+         * VÁLASZLEHETŐSÉGEK
+         */
+
+        else {
+
+          let answerText =
+            line
+              .replace(/^\s*•\s*/, "")
+              .trim();
+
+
+          let starIndex =
+            answerText.indexOf("*");
+
+
+          let isCorrect = false;
+
+
+          if (starIndex >= 0) {
+
+            isCorrect = true;
+
+            answerText =
+              answerText
+                .substring(0, starIndex)
+                .trim();
+
+          }
+
+
+          const optionIndex =
+            currentQuestion.options.length;
+
+
+          currentQuestion.options.push(
+            answerText
+          );
+
+
+          if (isCorrect) {
+
+            currentQuestion.correctAnswers.push(
+              optionIndex
+            );
+
+          }
+
+        }
+
+      }
+
+    });
+
+
+    finalizeQuestion();
+
+
+    /*
+     * AZ ID-K KORREKT ÚJRAOSZTÁSA
+     */
+
+    importedQuestions.forEach(question => {
+
+      question.id = generateId();
+
+      questionPool.push(question);
+
+    });
+
+
+    updateDisplay();
+
+
+    document.getElementById("inputText").value = "";
+
+
+    showStatus(
+      "importStatus",
+      `${importedQuestions.length} kérdés sikeresen importálva.`,
+      "success"
+    );
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * HTML ESCAPING
+   * ============================================================
+   */
+
+  function escapeHTML(text) {
+
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function escapeAttribute(text) {
+
+    return escapeHTML(text);
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * STÁTUSZÜZENET
+   * ============================================================
+   */
+
+  function showStatus(
+    elementId,
+    message,
+    type
+  ) {
+
+    const element =
+      document.getElementById(elementId);
+
+    element.textContent = message;
+
+    element.className =
+      "status " +
+      (
+        type === "success"
+          ? "success-status"
+          : "error-status"
+      );
+
+
+    setTimeout(() => {
+
+      element.className = "status";
+
+    }, 4000);
+
+  }
+
+
+
+  /*
+   * ============================================================
+   * MIT LICENSE
+   * ============================================================
+   *
+   * MIT License
+   *
+   * Copyright (c) 2025 Veljko Vuckovic (refloow.com)
+   *
+   * Permission is hereby granted, free of charge, to any person
+   * obtaining a copy of this software and associated
+   * documentation files (the "Software"), to deal in the
+   * Software without restriction, including without limitation
+   * the rights to use, copy, modify, merge, publish, distribute,
+   * sublicense, and/or sell copies of the Software, and to permit
+   * persons to whom the Software is furnished to do so, subject
+   * to the following conditions:
+   *
+   * The above copyright notice and this permission notice shall
+   * be included in all copies or substantial portions of the
+   * Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+   *
+   * ============================================================
+   */
+
+</script>
+
 </body>
 </html>
