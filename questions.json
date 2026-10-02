@@ -2,41 +2,1029 @@
   {
     "id": 1,
     "category": "retina",
-    "question": "Driving in ______ weather is dangerous due to lack of visibility.",
-    "options": ["freezing", "foggy", "shiny", "rainy"],
-    "correctAnswers": [1],
+    "question": "Melyik állítás igaz a retina fejlődési eredetére?",
+    "options": [
+      "A retina a diencephalonból származó neuroectodermalis struktúra.",
+      "A retina a felszíni ectodermából fejlődik.",
+      "A retina a mesencephalonból fejlődik.",
+      "A retina a neuralis crestből fejlődik.",
+      "A retina a perifériás érzőidegekhez hasonlóan fejlődik."
+    ],
+    "correctAnswers": [
+      0
+    ],
     "type": "single"
   },
   {
     "id": 2,
-    "category": "latomezok",
-    "question": "Which of the following are fruit?",
-    "options": ["Carrot", "Apple", "Broccoli", "Strawberry", "Lemon"],
-    "correctAnswers": [1, 3, 4],
+    "category": "retina",
+    "question": "Mely struktúrák találhatók meg a nervus opticus körül?",
+    "options": [
+      "Dura mater",
+      "Arachnoidea mater",
+      "Pia mater",
+      "Endoneurium",
+      "Perineurium"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
     "type": "multiple"
   },
   {
     "id": 3,
-    "category": "nervus_opticus",
-    "question": "2 + 2 = ?",
-    "options": ["3", "4", "5", "6"],
-    "correctAnswers": [1],
-    "type": "single"
+    "category": "retina",
+    "question": "Mely állítások jellemzik helyesen a retina információfeldolgozását?",
+    "options": [
+      "A retina kizárólag passzívan továbbítja a fotoreceptorok jelét.",
+      "A retina egyik fontos funkciója a vizuális információ tömörítése.",
+      "A retina többféle kontraszt- és térbeli információt képes kiemelni.",
+      "A ganglionsejtek száma nagyságrendileg megegyezik a fotoreceptorok számával."
+    ],
+    "correctAnswers": [
+      1,
+      2
+    ],
+    "type": "multiple"
   },
   {
     "id": 4,
-    "category": "chiasma",
-    "question": "Select all prime numbers:",
-    "options": ["2", "3", "4", "8", "11"],
-    "correctAnswers": [0, 1, 4],
+    "category": "retina",
+    "question": "Mely sejttípusok vesznek részt közvetlenül a retina klasszikus neuronális feldolgozó hálózatában?",
+    "options": [
+      "Müller sejtek",
+      "Multipoláris sejtek",
+      "Horizontális sejtek",
+      "Amakrin sejtek",
+      "Ganglionsejtek"
+    ],
+    "correctAnswers": [
+      2,
+      3,
+      4
+    ],
     "type": "multiple"
   },
   {
     "id": 5,
-    "category": "cgl",
-    "question": "What color is the sky on a clear day?",
-    "options": ["Blue", "Green", "Yellow", "Red"],
-    "correctAnswers": [0],
+    "category": "retina",
+    "question": "Mely állítások igazak a retina rétegeire?",
+    "options": [
+      "A stratum granulosum externum a fotoreceptorok sejttestjeit tartalmazza.",
+      "A stratum neurofibrarum a ganglionsejtek axonjait tartalmazza.",
+      "A stratum granulosum externum a fotoreceptorok sejttestjeit tartalmazza.",
+      "A stratum plexiforme externumban fotoreceptor–bipoláris és fotoreceptor–horizontális sejtkapcsolatok találhatók.",
+      "A stratum granulosum internum kizárólag bipoláris sejteket tartalmaz."
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 6,
+    "category": "retina",
+    "question": "Mely sejtek sejttestjei találhatók a stratum granulosum internumban?",
+    "options": [
+      "Bipoláris sejtek",
+      "Horizontális sejtek",
+      "Fotoreceptorok",
+      "Müller-sejtek",
+      "Ganglionsejtek"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 7,
+    "category": "retina",
+    "question": "Mely állítások igazak a Müller-féle gliasejtekre?",
+    "options": [
+      "A retina glialis sejtjei közé tartoznak.",
+      "Nyúlványaik részt vesznek a membrana limitans interna kialakításában.",
+      "Sejttestjeik a stratum granulosum internumban találhatók.",
+      "Ők generálják a retina ganglionsejtjeire továbbjutó akciós potenciáljait.",
+      "Sejttestjei a str. granulosum externumban találhatók"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 8,
+    "category": "retina",
+    "question": "Mely állítások írják le helyesen a fototranszdukciót?",
+    "options": [
+      "A fotoreceptorokban a fény energiája molekuláris változásokat indít el.",
+      "A folyamat végső soron megváltoztatja a fotoreceptor membránpotenciálját.",
+      "A fototranszdukció során a foton közvetlenül akciós potenciált generál a fotoreceptorban.",
+      "A folyamat a retina fényérzékelésének alapja.",
+      "A fototranszdukció a ganglionsejtek axonjaiban történik."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 9,
+    "category": "retina",
+    "question": "Mely állítások igazak a retina jelátvitelének elektromos természetére?",
+    "options": [
+      "A fotoreceptorok receptorpotenciált generálnak.",
+      "A ganglionsejt axonjában az információt elsősorban a kialakult membránpotenciál változás nagysága kódolja.",
+      "A ganglionsejteknél jelenik meg a klasszikus akciós potenciál.",
+      "A ganglionsejt axonjában az információt elsősorban az akciós potenciálok frekvenciája kódolja.",
+      "A fotoreceptorok axonjai már a retinában klasszikus akciós potenciálok sorozatát továbbítják."
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 10,
+    "category": "retina",
+    "question": "Mely állítások igazak a retina belső és külső rétegeinek kapcsolatára?",
+    "options": [
+      "Egy fotoreceptorról több ganglionsejt is kaphat információt.",
+      "A fotoreceptorok sejttestjei a stratum granulosum externumban találhatók.",
+      "A fotoreceptorok a stratum plexiforme externumban kapcsolódnak többek között bipoláris sejtekhez.",
+      "Egy ganglionsejt több fotoreceptorról is kaphat információt.",
+      "A ganglionsejtek közvetlenül a fotoreceptorokkal alkotnak szinapszist."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 11,
+    "category": "retina",
+    "question": "Mi a pigmentepithelium egyik fontos funkciója?",
+    "options": [
+      "A szórt fény elnyelése",
+      "A retina optikai zajának csökkentése",
+      "A ganglionsejtek axonjainak kialakítása",
+      "A megfelelő ionösszetétel kialakítása és megtartása",
+      "Az akciós potenciálok generálása"
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 12,
+    "category": "retina",
+    "question": "Mely állítások igazak a csapokra?",
+    "options": [
+      "Fontos szerepük van a éjszakai látásban.",
+      "Nagy szerepük van a nagy térbeli felbontású látásban.",
+      "A fovea centralisban nagy sűrűségben találhatók.",
+      "Három különböző típusuk vesz részt a különböző hullámhossztartományok érzékelésében.",
+      "Kizárólag sötétben működnek megfelelően."
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 13,
+    "category": "retina",
+    "question": "Mely állítások igazak a pálcikákra?",
+    "options": [
+      "Nagy fényérzékenységük van.",
+      "Fontos szerepük van gyenge fényviszonyok között.",
+      "Általában nagyobb konvergenciával kapcsolódnak a magasabb rendű struktúrákhoz, mint a fovealis csapok.",
+      "A nagy térbeli felbontású színlátás fő receptorai.",
+      "A pálcikarendszer különösen fontos a kontrasztok kialakításában."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 14,
+    "category": "retina",
+    "question": "Mi következik a nagyobb retinális konvergenciából?",
+    "options": [
+      "Növekedhet az érzékenység gyenge fényben.",
+      "Több fotoreceptor információja integrálódhat egy későbbi neuronon.",
+      "Javulhat a térbeli felbontás.",
+      "Nő annak a valószínűsége, hogy pontosan meghatározzuk az inger helyét.",
+      "A rendszer alkalmasabbá válhat gyenge jelek detektálására."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 15,
+    "category": "retina",
+    "question": "Mely állítások igazak a magnocellularis és parvocellularis rendszerekre?",
+    "options": [
+      "A magnocellularis rendszer nagyobb receptív mezőkkel jellemezhető.",
+      "A parvocellularis rendszer nagyobb térbeli felbontásra képes.",
+      "A parvocellularis rendszer fontos a mozgás és időbeli változások feldolgozásában.",
+      "A magnocellularis rendszer fontos a finom részletek és forma feldolgozásában.",
+      "A két rendszer teljesen független a retina korábbi feldolgozásától."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 16,
+    "category": "retina",
+    "question": "Melyik párosítások helyesek?",
+    "options": [
+      "Magnocellularis – nagyobb sejtek – nagyobb térbeli felbontás",
+      "Magnocellularis – nagyobb sejtek – nagyobb receptív mezők",
+      "Parvocellularis – kisebb sejtek – nagyobb térbeli felbontás",
+      "Magnocellularis – mozgás és időbeli változás",
+      "Parvocellularis – finom részletek és forma",
+      "Parvocellularis - nagyobb sejtek – kisebb térbeli felbontás."
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 17,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a retina és a látótér viszonyára?",
+    "options": [
+      "A temporalis látótér a nasalis retinafélre vetül.",
+      "A nasalis látótér a temporalis retinafélre vetül.",
+      "A temporalis látótér a temporalis retinafélre vetül.",
+      "A felső látótér az a felső retinafélre vetül.",
+      "A nasalis látótér a nasalis retinafélre vetül."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 18,
+    "category": "latopalya",
+    "question": "Egy jobb oldali teljes nervus opticus-laesio esetén mely állítás igaz?",
+    "options": [
+      "A jobb szem látása teljesen kieshet.",
+      "Monocularis vakság alakulhat ki.",
+      "A bal szem temporalis látótere izoláltan esik ki.",
+      "A bal szem látása teljesen kieshet.",
+      "A jobb tractus opticus sérülésével azonos látótérkiesés várható."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 19,
+    "category": "latopalya",
+    "question": "Mely rostok kereszteződnek a chiasma opticumban?",
+    "options": [
+      "A nasalis retinafélből származó rostok",
+      "A temporalis retinafélből származó rostok",
+      "Mindkét szem nasalis retinafeléből származó rostok",
+      "A jobb szem és a bal szem összes rostja az ellenkező oldalra"
+    ],
+    "correctAnswers": [
+      0,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 20,
+    "category": "latopalya",
+    "question": "Mi igaz a jobb oldali tractus opticust alkotó rostokra?",
+    "options": [
+      "A jobb szem temporalis retinafeléből származó rostok is részt vesznek benne.",
+      "A bal szem nasalis retinafeléből származó rostok is részt vesznek benne.",
+      "A jobb látóteret reprezentálja.",
+      "A bal látóteret reprezentálja.",
+      "A rostok kizárólag a jobb szemből származnak."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 21,
+    "category": "latopalya",
+    "question": "Melyik állítás igaz a chiasma opticum sérülésére?",
+    "options": [
+      "Bitemporalis hemianopsia alakulhat ki.",
+      "Binasalis hemianopsia alakul ki.",
+      "Mindkét szem teljes vaksága alakul ki.",
+      "A nervus opticus izolált sérülésével azonos kiesés jön létre.",
+      "A kiesés kizárólag a macularis látást érinti."
+    ],
+    "correctAnswers": [
+      0
+    ],
     "type": "single"
+  },
+  {
+    "id": 22,
+    "category": "latopalya",
+    "question": "Egy jobb oldali tractus opticus teljes laesiója esetén mely állítások igazak?",
+    "options": [
+      "A bal látófél kieshet.",
+      "Kontralaterális homonym hemianopsia alakulhat ki.",
+      "Mindkét szem temporalis látótere esik ki.",
+      "Mindkét szem jobb oldali látóterének a reprezentációja sérül.",
+      "Mindkét szem nasalis látóterének a reprezentációja sérül"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 23,
+    "category": "latopalya",
+    "question": "Mely struktúrákhoz küld rostokat a tractus opticus?",
+    "options": [
+      "Corpus geniculatum laterale",
+      "Pretectalis terület",
+      "Colliculus superior",
+      "Corpus geniculatum mediale",
+      "Kizárólag a primer látókéreg"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 24,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a corpus geniculatum lateraléra?",
+    "options": [
+      "A thalamushoz tartozik.",
+      "A diencephalonban található",
+      "Klasszikusan 5 rétegre osztjuk.",
+      "Megőrzi a retinotopikus szerveződést.",
+      "A mindkét szem információja megtalálható minden rétegben."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 25,
+    "category": "latopalya",
+    "question": "Mely rétegek tartoznak a magnocellularis rendszerhez a corpus geniculatum lateraléban?",
+    "options": [
+      "1. réteg",
+      "2. réteg",
+      "3. réteg",
+      "5. réteg",
+      "6. réteg"
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 26,
+    "category": "latopalya",
+    "question": "Mely rétegekben van ipszilaterális reprezentáció a corpus geniculatum lateraléban?",
+    "options": [
+      "1. réteg",
+      "2. réteg",
+      "3. réteg",
+      "4. réteg",
+      "5. réteg",
+      "6. réteg"
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 27,
+    "category": "latopalya",
+    "question": "Mely rétegekben van kontralaterális reprezentáció a corpus geniculatum lateraléban?",
+    "options": [
+      "1. réteg",
+      "2. réteg",
+      "3. réteg",
+      "4. réteg",
+      "5. réteg",
+      "6. réteg"
+    ],
+    "correctAnswers": [
+      0,
+      3,
+      5
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 28,
+    "category": "latopalya",
+    "question": "Mely rétegek parvocellularisak a corpus geniculatum lateraléban?",
+    "options": [
+      "1. réteg",
+      "2. réteg",
+      "3. réteg",
+      "4. réteg",
+      "5. réteg",
+      "6. réteg"
+    ],
+    "correctAnswers": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 29,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a két szem információjának rétegi elkülönítésére?",
+    "options": [
+      "Az 1. réteg kontralaterális szemből származó információt tartalmaz.",
+      "A 2. réteg ipsilaterális szemből származó információt tartalmaz.",
+      "A 3. réteg ipsilaterális szemből származó információt tartalmaz.",
+      "A 3. réteg kontralaterális szemből származó információt tartalmaz.",
+      "Az 5. réteg kontralaterális szemből származó információt tartalmaz.",
+      "A 6. réteg ipsilateralis szemből származó információt tartalmaz."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 30,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a corpus geniculatum laterale funkciójára?",
+    "options": [
+      "A beérkező vizuális információ rendezett továbbításában vesz részt.",
+      "Megőrzi a térbeli topográfiát.",
+      "Elkülöníti a két szem információját rétegszinten.",
+      "Elkülöníti a magno- és parvocellularis csatornákat.",
+      "Csak egy átkapcsoló állomás, és mást nem csinál."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 31,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a corpus geniculatum laterale sérülésére?",
+    "options": [
+      "Kontralaterális homonym hemianopsia alakulhat ki.",
+      "A látótérkiesés lehet részleges vagy teljes is.",
+      "A sérülés közvetlenül monocularis vakságot okoz.",
+      "A klinikai kép bizonyos tekintetben hasonlíthat a tractus opticus sérüléséhez.",
+      "A sérülés kizárólag a pupillareflexet érinti."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 32,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a radiatio opticára?",
+    "options": [
+      "A corpus geniculatum lateraléban található neuronok axonjai alkotják.",
+      "A primer látókéreg felé továbbít információt.",
+      "Az frontalis lebenyen áthaladó rostok között megtalálható a Meyer-kacs.",
+      "A temporalis lebenyen áthaladó rostok között megtalálható a Meyer-kacs.",
+      "Minden rost közvetlenül az occipitalis lebenybe fut, temporalis vagy parietalis kerülő nélkül."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 33,
+    "category": "latopalya",
+    "question": "Mely látóteret reprezentálják a bal oldali Meyer-kacson áthaladó rostok?",
+    "options": [
+      "Felső látótér",
+      "Alsó látótér",
+      "Az alsó retinafélből származó információ",
+      "A felső retinafélből származó információ",
+      "A jobb szem nasalis retinafélből származó információ",
+      "A bal szem nasalis retinafélből származó információ"
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 34,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a parietalis irányban futó radiatio optica rostokra?",
+    "options": [
+      "Elsősorban a felső retinafélből származó információt hordozzák.",
+      "Az alsó látóteret reprezentálják.",
+      "Sérülésük kontralaterális alsó quadrantanopsiát okozhat.",
+      "A Meyer-kacs részét képezik.",
+      "A temporalis lebenyen futnak."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 35,
+    "category": "latopalya",
+    "question": "Egy jobb oldali temporalis lebenyi laesio érinti a Meyer-kacs rostjait. Mely állítások igazak?",
+    "options": [
+      "A bal felső quadráns látótere eshet ki.",
+      "Kontralaterális felső quadrantanopsia alakulhat ki.",
+      "A bal alsó quadráns esik ki.",
+      "A sérült rostok az alsó retinafél információját hordozzák.",
+      "A kiesés klasszikusan „pie in the sky” típusú."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 36,
+    "category": "latopalya",
+    "question": "Egy bal oldali parietalis radiatio optica-laesio esetén melyik kombináció várható?",
+    "options": [
+      "Jobb alsó quadrantanopsia",
+      "Jobb felső quadrantanopsia",
+      "Bal alsó quadrantanopsia",
+      "A felső retinafélből származó rostok érintettsége",
+      "„Pie on the floor”"
+    ],
+    "correctAnswers": [
+      0,
+      3,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 37,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak a primer látókéregre?",
+    "options": [
+      "A Brodmann 17-es mezőnek felel meg.",
+      "Az occipitalis lebeny medialis felszínén helyezkedik el.",
+      "A sulcus calcarinus környezetében található.",
+      "Area parastriata néven is ismert.",
+      "A Brodmann 19-es mezővel azonos."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 38,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak a primer látókéreg retinotópiájára?",
+    "options": [
+      "A retinotópiás szerveződés itt is megmarad.",
+      "Szomszédos retinális területek szomszédos kérgi területeken reprezentálódhatnak.",
+      "A macula aránytalanul kis kérgi reprezentációval rendelkezik.",
+      "A perifériás retina sokkal nagyobb kérgi reprezentációval rendelkezik, mint a macula.",
+      "A retinotópia a chiasma opticumnál megszűnik."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 39,
+    "category": "kergi_feldolgozas",
+    "question": "Mely vizuális jellemzők feldolgozásában vesznek részt a primer látókéreg neuronjai?",
+    "options": [
+      "Élek",
+      "Az alma, mint fogalom értelmezése",
+      "Kontraszt",
+      "Mozgással kapcsolatos jellemzők",
+      "Egy adott személy arcának a felismerése"
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 40,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak a primer látókéreg és az asszociációs látókéreg kapcsolatára?",
+    "options": [
+      "A primer látókéreg nem önmagában állítja elő a teljes vizuális élményt.",
+      "A magasabb rendű látókéreg egyre összetettebb mintázatokat képes feldolgozni.",
+      "A Brodmann 18 és 19 területei az multimodális látókéreghez kapcsolódnak.",
+      "A vizuális feldolgozás a primer látókéreggel minden szempontból véget ér.",
+      "Az asszociációs kéreg képes az egyszerűbb vizuális jellemzőket összetettebb alakzatokká integrálni."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 41,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak a dorsalis vizuális pályára?",
+    "options": [
+      "A parietalis lebeny irányába halad.",
+      "A temporalis lebeny irányába halad.",
+      "Fontos a tárgy térbeli helyzetének feldolgozásában.",
+      "Fontos a mozgás feldolgozásában.",
+      "A cselekvéshez kapcsolódó vizuális információfeldolgozásban is szerepet játszik.",
+      "A tárgy pontos felismeréséért felel."
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      3,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 42,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak a ventralis vizuális pályára?",
+    "options": [
+      "A temporalis lebeny irányába halad.",
+      "Fontos a tárgyak felismerésében.",
+      "Fontos az arcok felismerésében.",
+      "A „Hol?” kérdéshez kapcsolódó feldolgozásban vesz részt.",
+      "A parietalis lebeny irányába halad."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 43,
+    "category": "kergi_feldolgozas",
+    "question": "Melyik állítások kapcsolhatók a prosopagnosiához?",
+    "options": [
+      "A parietalis vizuális hálózatok sérülésével összefügghet",
+      "Kétoldali temporalis/inferotemporalis vizuális hálózatok sérülésével összefügghet",
+      "A beteg képes lehet felismerni, hogy egy arcot lát.",
+      "Az arc tulajdonosának azonosítása mégis zavart lehet.",
+      "Szükségszerűen teljes corticalis vaksággal jár."
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 44,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak az olvasás neurobiológiai alapjaira?",
+    "options": [
+      "Az agy egy kifejezetten az „olvasásra létrehozott” teljesen új érzékszervi rendszert használ.",
+      "A vizuális rendszer meglévő mechanizmusait részben újrafelhasználja.",
+      "A retina önmagában képes a betűk jelentését értelmezni.",
+      "A primer látókéreg már képes a betűk jelentését értelmezni.",
+      "A vizuális felismerés és a nyelvi jelentés hozzárendelése különböző feldolgozási szinteket igényel."
+    ],
+    "correctAnswers": [
+      1,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 45,
+    "category": "kergi_feldolgozas",
+    "question": "Ha valaki pontosan felismeri, hogy a „KRPZTLM” hét betűből álló vizuális jelsorozat, de nem tud hozzá jelentést rendelni, mely feldolgozási szintek működhetnek megfelelően?",
+    "options": [
+      "Retina",
+      "Primer látókéreg",
+      "Vizuális asszociációs kéreg",
+      "Nyelvi szemantikai feldolgozás",
+      "Fototranszdukció"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 46,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak az intrinszik fotoszenzitív ganglionsejtekre?",
+    "options": [
+      "Melanopszint tartalmaznak.",
+      "Képesek közvetlenül érzékelni a fényt.",
+      "A csapok és pálcikák által közvetített információt nem integrálják.",
+      "Fontosak lehetnek a környezeti fényviszonyok érzékelésében.",
+      "A nagy felbontású tudatos látásért felelősek."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 47,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely állítások igazak az intrinszik fotoszenzitív ganglionsejtekre?",
+    "options": [
+      "Melanopszint tartalmaznak.",
+      "Képesek közvetlenül érzékelni a fényt.",
+      "A csapok és pálcikák által közvetített információt nem integrálják.",
+      "Fontosak lehetnek a környezeti fényviszonyok érzékelésében.",
+      "A nagy felbontású tudatos látásért felelősek."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 48,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely struktúrák vesznek részt a pupillareflex klasszikus afferens-efferens ívében?",
+    "options": [
+      "A IV-es agyideg",
+      "A II-es agyideg",
+      "A III-as agyideg",
+      "A VI-os agyideg",
+      "Pretectalis area",
+      "Edinger–Westphal-mag"
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 49,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely állítások igazak az Edinger–Westphal-magból kiinduló pupilláris paraszimpatikus pályára?",
+    "options": [
+      "Postganglionaris paraszimpatikus rostok indulnak belőle.",
+      "A rostok a nervus oculomotorius részeként haladnak.",
+      "A ciliáris ganglionban történik az átkapcsolás.",
+      "A postganglionaris rostok a ggl. ciliare felé haladnak.",
+      "Közvetlenül a nervus facialis motoros magjába kapcsolnak át."
+    ],
+    "correctAnswers": [
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 50,
+    "category": "nem_tudatos_palyak",
+    "question": "Miért lehet consensualis pupillareflex akkor is, ha csak az egyik szembe világítunk?",
+    "options": [
+      "Mert a pretectalis terület mindkét oldali Edinger–Westphal-maghoz küld kapcsolatokat.",
+      "Az afferens fényinformáció központilag bilaterálisan kapcsolódik.",
+      "Mert a chiasma opticumban kereszteződnek a rostok",
+      "Mindkét oldali paraszimpatikus efferens pálya aktiválódhat.",
+      "A nervus facialis kétoldali motoros beidegzése miatt történik."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 51,
+    "category": "nem_tudatos_palyak",
+    "question": "Egy beteg esetében a jobb szembe világítva mindkét pupilla beszűkül, a bal szembe világítva egyik pupilla sem reagál. Mely állítások következnek ebből?",
+    "options": [
+      "A bal oldali afferens pálya károsodása felmerül.",
+      "A jobb oldali afferens pálya károsodhatott.",
+      "A kétoldali efferens pupillamotoros rendszer legalább részben működőképes.",
+      "A bal nervus opticus károsodása lehetséges magyarázat.",
+      "A nervus oculomotorius kétoldali teljes bénulása biztosan fennáll."
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 52,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely állítások igazak a colliculus inferior funkciójára?",
+    "options": [
+      "A mesencephalon tectumának része.",
+      "A colliculus superior kapcsolódik a látórendszerhez",
+      "Kapcsolatban áll a szemmozgató rendszerrel.",
+      "A fej és a tekintet gyors orientációjában is szerepet játszhat.",
+      "Elsődleges feladata a tudatos színlátás."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 53,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely struktúrák kapcsolhatók a corneareflex afferens oldalához?",
+    "options": [
+      "Cornea érző végződései",
+      "Nervus ophthalmicus (V1)",
+      "Nervus nasociliaris",
+      "Ganglion trigeminale",
+      "Nervus facialis motoros magja"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 54,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely struktúrák tartoznak a corneareflex efferens oldalához?",
+    "options": [
+      "Nucleus motorius nervi facialis",
+      "Nervus facialis",
+      "Musculus orbicularis oculi",
+      "Nervus ophthalmicus",
+      "Ganglion trigeminale"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 55,
+    "category": "nem_tudatos_palyak",
+    "question": "Miért záródik általában mindkét szemhéj cornea ingerlésekor?",
+    "options": [
+      "A központi reflexkapcsolatok bilaterálisak.",
+      "Mindkét oldali nucleus motorius nervi facialis aktiválódhat.",
+      "Mindkét musculus orbicularis oculi összehúzódhat.",
+      "Mert a cornea afferens rostjai mindig ipsilateralisan kapcsolnak át.",
+      "A reflexhez szükséges motoros válasz csak a stimulált oldalon jön létre."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 56,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely állítások igazak a retinohypothalamicus pályára?",
+    "options": [
+      "Nem képalkotó pálya.",
+      "A cirkadián ritmus szabályozásában vesz részt.",
+      "A retina intrinszik fotoszenzitív ganglionsejtjei melatonint termelnek.",
+      "A hypothalamus suprachiasmaticus magjához továbbít fényinformációt.",
+      "Elsődleges végállomása a primer látókéreg."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 57,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely állítások igazak a suprachiasmaticus mag és a fény kapcsolatára?",
+    "options": [
+      "A suprachiasmaticus mag a hypothalamus része.",
+      "A suprachiasmaticus mag a thalamus része.",
+      "A rendszer szerepet játszik a cirkadián ritmus összehangolásában.",
+      "A fényviszonyok hatással lehetnek a melatoninrendszer működésére.",
+      "A suprachiasmaticus mag a corpus geniculatum laterale hatodik rétege."
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      3
+    ],
+    "type": "multiple"
   }
 ]
