@@ -15,6 +15,7 @@
       --brand-500: #364c67;      /* világosabb kiemelő kék */
       --brand-100: #e4edf9;      /* halvány kék felület */
       --bg: #364c67;            /* oldal háttér */
+      --bg-mobile: #183353;     /* oldal háttér mobil nézetben */
       --surface: #ffffff;        /* kártya háttér */
       --text: #14243b;           /* fő szöveg */
       --muted: #5b6b82;          /* halvány szöveg */
@@ -176,6 +177,13 @@
     }
     .hidden {
       display: none;
+    }
+
+    /* ========== MOBIL NÉZET ========== */
+    @media (max-width: 600px) {
+      body:not(.dark-mode) {
+        background-color: var(--bg-mobile);
+      }
     }
 
     /* ========== THEME STYLES ========== */
