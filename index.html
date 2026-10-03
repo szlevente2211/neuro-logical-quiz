@@ -350,8 +350,18 @@
   // --- Folytatás frissítés után ---
   let originalPool = [];          // a kérdések az eredeti sorrendben
   let scoreAtQuestionStart = 0;   // a pontszám az aktuális kérdés kezdetekor
-  const STORAGE_KEY = 'neurokviz_progress_v1';
+  const STORAGE_KEY = 'neurokviz_progress_v2';
   const NAME_PREFIX = 'neurokviz:';  // a window.name tartalék előtagja
+
+  // A kérdések azonosítása a questions.json "id" mezője alapján
+  // (ha egy kérdésnek nincs id-ja, a sorszámát használjuk)
+  function qKey(q) {
+    if (q && q.id !== undefined && q.id !== null) return String(q.id);
+    return 'idx' + originalPool.indexOf(q);
+  }
+  function findByKey(key) {
+    return originalPool.find(q => qKey(q) === String(key)) || null;
+  }
 
   // Mentett adat olvasása a helyi tárolókból (localStorage → sessionStorage → window.name)
   function readLocalRaw() {
@@ -376,11 +386,11 @@
 
   function saveProgress() {
     const json = JSON.stringify({
-      selected: selectedQuestions.map(q => originalPool.indexOf(q)),
+      selectedIds: selectedQuestions.map(qKey),     // a kisorsolt kérdések id-i, sorrendben
+      currentId: qKey(selectedQuestions[currentIndex]), // melyik id-nál tartott
       currentIndex: currentIndex,
       score: scoreAtQuestionStart,
-      timeRemaining: timeRemaining,
-      poolSize: originalPool.length
+      timeRemaining: timeRemaining
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
     try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
@@ -424,15 +434,24 @@
     try {
       if (!raw) return null;
       const s = JSON.parse(raw);
+      if (!s || !Array.isArray(s.selectedIds)) return null;
+
       const expected = Math.min(config.questionsToPick, originalPool.length);
-      if (!s || !Array.isArray(s.selected)) return null;
-      if (s.poolSize !== originalPool.length) return null;
-      if (s.selected.length !== expected) return null;
-      if (!s.selected.every(i => Number.isInteger(i) && i >= 0 && i < originalPool.length)) return null;
-      if (!Number.isInteger(s.currentIndex) || s.currentIndex < 0 || s.currentIndex >= s.selected.length) return null;
+      if (s.selectedIds.length !== expected) return null;
+
+      // az id-k alapján keressük vissza a kérdéseket a questions.json-ból
+      const questions = s.selectedIds.map(findByKey);
+      if (questions.some(q => !q)) return null; // valamelyik kérdés már nincs meg
+
+      // hol tartott: elsősorban az id alapján
+      let idx = s.selectedIds.map(String).indexOf(String(s.currentId));
+      if (idx < 0) idx = s.currentIndex;
+      if (!Number.isInteger(idx) || idx < 0 || idx >= questions.length) return null;
+
       if (typeof s.timeRemaining !== 'number' || s.timeRemaining <= 0) return null;
       if (typeof s.score !== 'number' || s.score < 0) return null;
-      return s;
+
+      return { questions: questions, currentIndex: idx, score: s.score, timeRemaining: s.timeRemaining };
     } catch (e) {
       return null;
     }
@@ -476,7 +495,7 @@
   function initQuiz(saved) {
     if (saved) {
       // Folytatás ott, ahol abbahagyta
-      selectedQuestions = saved.selected.map(i => originalPool[i]);
+      selectedQuestions = saved.questions;
       currentIndex = saved.currentIndex;
       userScore = saved.score;
       timeRemaining = saved.timeRemaining;
