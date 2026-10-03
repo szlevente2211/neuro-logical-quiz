@@ -180,8 +180,11 @@
     }
 
     /* ========== MOBIL NÉZET ========== */
-    @media (max-width: 600px) {
-        background-color: var(--bg-mobile);
+    @media (max-width: 768px) {
+      html,
+      body,
+      body.dark-mode {
+        background-color: var(--bg-mobile) !important; /* mobilon mindig ez a háttér, sötét módban is */
       }
     }
 
