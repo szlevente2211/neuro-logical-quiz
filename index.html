@@ -351,26 +351,77 @@
   let originalPool = [];          // a kérdések az eredeti sorrendben
   let scoreAtQuestionStart = 0;   // a pontszám az aktuális kérdés kezdetekor
   const STORAGE_KEY = 'neurokviz_progress_v1';
+  const NAME_PREFIX = 'neurokviz:';  // a window.name tartalék előtagja
+
+  // Mentett adat olvasása a helyi tárolókból (localStorage → sessionStorage → window.name)
+  function readLocalRaw() {
+    let v = null;
+    try { v = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (v) return v;
+    try { v = sessionStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (v) return v;
+    try {
+      const n = String(window.name || '');
+      if (n.indexOf(NAME_PREFIX) === 0) return n.slice(NAME_PREFIX.length);
+    } catch (e) {}
+    return null;
+  }
+
+  // Üzenet küldése a beágyazó oldalnak (ha iframe-ben fut)
+  function postToParent(msg) {
+    try {
+      if (window.parent !== window) window.parent.postMessage(msg, '*');
+    } catch (e) {}
+  }
 
   function saveProgress() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        selected: selectedQuestions.map(q => originalPool.indexOf(q)),
-        currentIndex: currentIndex,
-        score: scoreAtQuestionStart,
-        timeRemaining: timeRemaining,
-        poolSize: originalPool.length
-      }));
-    } catch (e) { /* a tárolás nem elérhető, a kvíz így is működik */ }
+    const json = JSON.stringify({
+      selected: selectedQuestions.map(q => originalPool.indexOf(q)),
+      currentIndex: currentIndex,
+      score: scoreAtQuestionStart,
+      timeRemaining: timeRemaining,
+      poolSize: originalPool.length
+    });
+    // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
+    try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
+    try { sessionStorage.setItem(STORAGE_KEY, json); } catch (e) {}
+    try { window.name = NAME_PREFIX + json; } catch (e) {}
+    // 2) a beágyazó oldal tárolójába is (iframe-ben ez megbízhatóbb)
+    postToParent({ type: 'quiz-save', state: json });
   }
 
   function clearProgress() {
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    try { if (String(window.name).indexOf(NAME_PREFIX) === 0) window.name = ''; } catch (e) {}
+    postToParent({ type: 'quiz-clear' });
   }
 
-  function loadProgress() {
+  // Mentett állapot lekérése: először a beágyazó oldaltól, ha az nem válaszol, a saját tárolóból
+  function getSavedRaw() {
+    return new Promise(resolve => {
+      const local = readLocalRaw();
+      if (window.parent === window) { resolve(local); return; }
+
+      let done = false;
+      function finish(value) {
+        if (done) return;
+        done = true;
+        window.removeEventListener('message', onMsg);
+        resolve(value);
+      }
+      function onMsg(e) {
+        if (e.source !== window.parent || !e.data || e.data.type !== 'quiz-state') return;
+        finish(typeof e.data.state === 'string' ? e.data.state : local);
+      }
+      window.addEventListener('message', onMsg);
+      postToParent({ type: 'quiz-load' });
+      setTimeout(() => finish(local), 800);
+    });
+  }
+
+  function loadProgress(raw) {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
       const s = JSON.parse(raw);
       const expected = Math.min(config.questionsToPick, originalPool.length);
@@ -415,7 +466,7 @@
     questionPool = await response.json();
     originalPool = questionPool.slice();
 
-    initQuiz(loadProgress());
+    initQuiz(loadProgress(await getSavedRaw()));
   } catch (error) {
     console.error(error);
     questionTextEl.textContent = 'A kérdésbank betöltése sikertelen.';
