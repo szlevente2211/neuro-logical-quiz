@@ -347,6 +347,46 @@
   let timerInterval = null;
   let timeRemaining = 0;
 
+  // --- Folytatás frissítés után ---
+  let originalPool = [];          // a kérdések az eredeti sorrendben
+  let scoreAtQuestionStart = 0;   // a pontszám az aktuális kérdés kezdetekor
+  const STORAGE_KEY = 'neurokviz_progress_v1';
+
+  function saveProgress() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        selected: selectedQuestions.map(q => originalPool.indexOf(q)),
+        currentIndex: currentIndex,
+        score: scoreAtQuestionStart,
+        timeRemaining: timeRemaining,
+        poolSize: originalPool.length
+      }));
+    } catch (e) { /* a tárolás nem elérhető, a kvíz így is működik */ }
+  }
+
+  function clearProgress() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  }
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const s = JSON.parse(raw);
+      const expected = Math.min(config.questionsToPick, originalPool.length);
+      if (!s || !Array.isArray(s.selected)) return null;
+      if (s.poolSize !== originalPool.length) return null;
+      if (s.selected.length !== expected) return null;
+      if (!s.selected.every(i => Number.isInteger(i) && i >= 0 && i < originalPool.length)) return null;
+      if (!Number.isInteger(s.currentIndex) || s.currentIndex < 0 || s.currentIndex >= s.selected.length) return null;
+      if (typeof s.timeRemaining !== 'number' || s.timeRemaining <= 0) return null;
+      if (typeof s.score !== 'number' || s.score < 0) return null;
+      return s;
+    } catch (e) {
+      return null;
+    }
+  }
+
   /******************************************************
    * 3) DOM ELEMENTS
    ******************************************************/
@@ -373,23 +413,37 @@
     }
 
     questionPool = await response.json();
+    originalPool = questionPool.slice();
 
-    initQuiz();
+    initQuiz(loadProgress());
   } catch (error) {
     console.error(error);
     questionTextEl.textContent = 'A kérdésbank betöltése sikertelen.';
   }
 });
 
-  function initQuiz() {
-    // Shuffle and pick N questions
-    const shuffled = questionPool.sort(() => Math.random() - 0.5);
-    selectedQuestions = shuffled.slice(0, config.questionsToPick);
+  function initQuiz(saved) {
+    if (saved) {
+      // Folytatás ott, ahol abbahagyta
+      selectedQuestions = saved.selected.map(i => originalPool[i]);
+      currentIndex = saved.currentIndex;
+      userScore = saved.score;
+      timeRemaining = saved.timeRemaining;
 
-    // Reset state
-    currentIndex = 0;
-    userScore = 0;
-    timeRemaining = config.totalTime;
+      let m = Math.floor(timeRemaining / 60);
+      let sec = timeRemaining % 60;
+      if (sec < 10) sec = '0' + sec;
+      timerEl.textContent = `${m}:${sec}`;
+    } else {
+      // Shuffle and pick N questions
+      const shuffled = questionPool.sort(() => Math.random() - 0.5);
+      selectedQuestions = shuffled.slice(0, config.questionsToPick);
+
+      // Reset state
+      currentIndex = 0;
+      userScore = 0;
+      timeRemaining = config.totalTime;
+    }
     feedbackEl.style.display = 'none';
     nextBtn.classList.add('hidden');
     checkBtn.classList.remove('hidden');
@@ -427,6 +481,7 @@
    ******************************************************/
   function renderQuestion() {
     const q = selectedQuestions[currentIndex];
+    scoreAtQuestionStart = userScore;
 
     // Use formatTextForHTML for the question
     questionTextEl.innerHTML = formatTextForHTML(q.question);
@@ -478,6 +533,9 @@
 
     // Update "questions remaining"
     questionsRemainingEl.textContent = (selectedQuestions.length - currentIndex);
+
+    // Haladás mentése (frissítés után innen folytatódik)
+    saveProgress();
   }
 
   /******************************************************
@@ -573,6 +631,7 @@
   function endQuiz() {
     clearInterval(timerInterval);
     timerInterval = null;
+    clearProgress(); // a befejezett teszt után frissítéskor újraindul
     document.getElementById('quiz-layout').style.display = 'none';
 
     // Convert userScore to a final percentage
@@ -594,6 +653,7 @@
     let seconds = timeRemaining % 60;
     if (seconds < 10) seconds = '0' + seconds;
     timerEl.textContent = `${minutes}:${seconds}`;
+    saveProgress();
   }
 
   /******************************************************
