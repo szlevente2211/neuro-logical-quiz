@@ -279,7 +279,7 @@
     .navigation-row button {
       margin-bottom: 0;
     }
-    .score-container {
+    .-container {
       text-align: center;
       margin: 20px 0 0;
       padding: 32px 20px;
@@ -289,11 +289,11 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
-    .score-container h2 {
+    .-container h2 {
       margin: 0 0 8px;
       color: var(--brand-900);
     }
-    #score-percent {
+    #-percent {
       font-size: 2.6rem;
       font-weight: 800;
       color: var(--brand-600);
@@ -375,9 +375,9 @@
       </div>
     </div>
 
-   <div class="score-container hidden" id="score-container">
+   <div class="-container hidden" id="-container">
   <h2>Végső eredményed:</h2>
-  <div id="score-percent"></div>
+  <div id="-percent"></div>
   <div id="final-feedback" class="final-feedback"></div>
 </div>
   </div>
@@ -400,7 +400,7 @@
    ******************************************************/
   let selectedQuestions = [];
 let currentIndex = 0;
-let userScore = 0;
+let user = 0;
 let timerInterval = null;
 let timeRemaining = 0;
 let questionResults = [];
@@ -448,7 +448,7 @@ let questionResults = [];
       currentId: qKey(selectedQuestions[currentIndex]), // melyik id-nál tartott
       currentIndex: currentIndex,
       score: scoreAtQuestionStart,
-      timeRemaining: timeRemaining
+      timeRemaining: timeRemaining,
       questionResults: questionResults,
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
