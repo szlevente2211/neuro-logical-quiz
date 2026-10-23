@@ -450,6 +450,7 @@
       currentIndex: currentIndex,
       score: scoreAtQuestionStart,
       timeRemaining: timeRemaining
+      questionResults: questionResults,
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
     try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
@@ -510,7 +511,15 @@
       if (typeof s.timeRemaining !== 'number' || s.timeRemaining <= 0) return null;
       if (typeof s.score !== 'number' || s.score < 0) return null;
 
-      return { questions: questions, currentIndex: idx, score: s.score, timeRemaining: s.timeRemaining };
+      return {
+  questions: questions,
+  currentIndex: idx,
+  score: s.score,
+  timeRemaining: s.timeRemaining,
+  questionResults: Array.isArray(s.questionResults)
+    ? s.questionResults
+    : []
+};
     } catch (e) {
       return null;
     }
@@ -611,6 +620,7 @@ function selectDemoQuestions() {
       currentIndex = saved.currentIndex;
       userScore = saved.score;
       timeRemaining = saved.timeRemaining;
+      questionResults = saved.questionResults || [];
 
       let m = Math.floor(timeRemaining / 60);
       let sec = timeRemaining % 60;
