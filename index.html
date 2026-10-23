@@ -630,23 +630,27 @@
       .filter(inp => inp.checked)
       .map(inp => parseInt(inp.value));
 
-    // Evaluate correctness
+        // Pontozás: (bejelölt helyes - bejelölt helytelen)
+    // / összes helyes válasz, minimum 0 ponttal
     const correctSet = new Set(q.correctAnswers);
     const userSet = new Set(checkedIndices);
 
-    // If user selected any *incorrect* => 0
-    let fraction = 0;
-    for (let val of userSet) {
-      if (!correctSet.has(val)) {
-        fraction = 0;
-        showFeedback('incorrect', q, fraction);
-        userScore += 0;
-        return;
+    let correctSelected = 0;
+    let incorrectSelected = 0;
+
+    for (const val of userSet) {
+      if (correctSet.has(val)) {
+        correctSelected++;
+      } else {
+        incorrectSelected++;
       }
     }
 
-    // If user didn't pick anything wrong but missed some correct => partial
-    fraction = userSet.size / correctSet.size;
+    const fraction = Math.max(
+      0,
+      (correctSelected - incorrectSelected) / correctSet.size
+    );
+
     if (fraction === 1) {
       showFeedback('correct', q, fraction);
     } else if (fraction > 0) {
@@ -654,6 +658,7 @@
     } else {
       showFeedback('incorrect', q, fraction);
     }
+
     userScore += fraction;
   });
 
