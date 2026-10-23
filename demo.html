@@ -148,6 +148,23 @@
       cursor: pointer;
       flex: 1;
     }
+
+    /* ellenőrzés után a válaszok már nem módosíthatók */
+    .option-item.locked,
+    .option-item.locked input,
+    .option-item.locked label {
+      cursor: default;
+    }
+    .option-item.locked:hover {
+      border-color: var(--border);
+      background-color: var(--surface);
+    }
+    .option-item.locked:has(input:checked),
+    .option-item.locked:has(input:checked):hover {
+      border-color: var(--brand-600);
+      background-color: var(--brand-100);
+    }
+
     .feedback {
       text-align: center;
       font-weight: 600;
@@ -230,7 +247,7 @@
       color: #fff;
       border-color: #d24848;
     }
-    .dark-mode .feedback. {
+    .dark-mode .feedback.partial {
       background-color: #e6b422;
       color: #000;
       border-color: #f0c840;
@@ -406,9 +423,13 @@
   let timeRemaining = 0;
   let questionResults = [];
 
+  // --- Az aktuális kérdés ellenőrzési állapota ---
+  let answered = false;           // megnyomta-e már az Ellenőrzés gombot az aktuális kérdésnél
+  let answeredChecked = [];       // az Ellenőrzéskor bejelölt válaszok (eredeti indexek)
+
   // --- Folytatás frissítés után ---
   let originalPool = [];          // a kérdések az eredeti sorrendben
-  let  = 0;   // a pontszám az aktuális kérdés kezdetekor
+  let scoreAtQuestionStart = 0;   // a pontszám az aktuális kérdés kezdetekor
   const STORAGE_KEY = 'neurokviz_progress_v2';
   const NAME_PREFIX = 'neurokviz:';  // a window.name tartalék előtagja
 
@@ -450,7 +471,11 @@
       currentIndex: currentIndex,
       score: scoreAtQuestionStart,
       timeRemaining: timeRemaining,
-      questionResults: questionResults,
+      // az aktuális kérdés eredménye nem kerül mentésre, azt a betöltéskor
+      // az ellenőrzött válaszokból újraszámoljuk (így nem számolódik kétszer)
+      questionResults: questionResults.slice(0, currentIndex),
+      answered: answered,
+      checked: answered ? answeredChecked : [],
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
     try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
@@ -511,6 +536,14 @@
       if (typeof s.timeRemaining !== 'number' || s.timeRemaining <= 0) return null;
       if (typeof s.score !== 'number' || s.score < 0) return null;
 
+      // ha az aktuális kérdésnél már megnyomta az Ellenőrzést, a bejelölt válaszai is visszajönnek
+      let answeredSaved = false;
+      let checkedSaved = [];
+      if (s.answered === true && Array.isArray(s.checked)) {
+        checkedSaved = s.checked.filter(Number.isInteger);
+        answeredSaved = true;
+      }
+
       return {
   questions: questions,
   currentIndex: idx,
@@ -518,7 +551,9 @@
   timeRemaining: s.timeRemaining,
   questionResults: Array.isArray(s.questionResults)
     ? s.questionResults
-    : []
+    : [],
+  answered: answeredSaved,
+  checked: checkedSaved
 };
     } catch (e) {
       return null;
@@ -614,6 +649,8 @@ function selectDemoQuestions() {
 }
     
   function initQuiz(saved) {
+    let restoredChecked = null; // ha az aktuális kérdésnél már ellenőrzött, az ő válaszai
+
     if (saved) {
       // Folytatás ott, ahol abbahagyta
       selectedQuestions = saved.questions;
@@ -621,6 +658,7 @@ function selectDemoQuestions() {
       userScore = saved.score;
       timeRemaining = saved.timeRemaining;
       questionResults = saved.questionResults || [];
+      if (saved.answered) restoredChecked = saved.checked;
 
       let m = Math.floor(timeRemaining / 60);
       let sec = timeRemaining % 60;
@@ -647,7 +685,7 @@ function selectDemoQuestions() {
     timerInterval = setInterval(updateTimer, 1000);
 
     // Render first question
-    renderQuestion();
+    renderQuestion(restoredChecked);
   }
 
   /******************************************************
@@ -670,10 +708,14 @@ function selectDemoQuestions() {
 
   /******************************************************
    * 6) RENDER QUESTION
+   * restoredChecked: ha nem null, akkor az aktuális kérdésnél már
+   * megtörtént az ellenőrzés (frissítés után), és ezek a bejelölt válaszok.
    ******************************************************/
-  function renderQuestion() {
+  function renderQuestion(restoredChecked = null) {
     const q = selectedQuestions[currentIndex];
     scoreAtQuestionStart = userScore;
+    answered = false;
+    answeredChecked = [];
 
     // Use formatTextForHTML for the question
     questionTextEl.innerHTML = formatTextForHTML(q.question);
@@ -714,7 +756,12 @@ function selectDemoQuestions() {
 
       // Az egész sorra kattintva is jelölje be/ki a választ
       // (ha közvetlenül a négyzetre/körre kattintanak, azt a böngésző intézi)
+      // Ellenőrzés után már nem módosítható.
       wrapper.addEventListener('click', (e) => {
+        if (answered) {
+          e.preventDefault();
+          return;
+        }
         if (e.target !== input) {
           input.click();
         }
@@ -726,6 +773,15 @@ function selectDemoQuestions() {
     // Update "questions remaining"
     questionsRemainingEl.textContent = (selectedQuestions.length - currentIndex);
 
+    // Frissítés után: a korábban bejelölt válaszok visszaállítása és az ellenőrzés újra lefuttatása
+    if (restoredChecked) {
+      const inputs = [...optionsContainerEl.querySelectorAll('input')];
+      inputs.forEach(inp => {
+        inp.checked = restoredChecked.includes(parseInt(inp.value));
+      });
+      submitAnswer(restoredChecked);
+    }
+
     // Haladás mentése (frissítés után innen folytatódik)
     saveProgress();
   }
@@ -733,16 +789,10 @@ function selectDemoQuestions() {
   /******************************************************
    * 7) CHECK ANSWER
    ******************************************************/
-  checkBtn.addEventListener('click', () => {
+  function submitAnswer(checkedIndices) {
     const q = selectedQuestions[currentIndex];
-    const inputs = [...optionsContainerEl.querySelectorAll('input')];
-    
-    // Indices that the user checked
-    const checkedIndices = inputs
-      .filter(inp => inp.checked)
-      .map(inp => parseInt(inp.value));
 
-        // Pontozás: (bejelölt helyes - bejelölt helytelen)
+    // Pontozás: (bejelölt helyes - bejelölt helytelen)
     // / összes helyes válasz, minimum 0 ponttal
     const correctSet = new Set(q.correctAnswers);
     const userSet = new Set(checkedIndices);
@@ -763,6 +813,16 @@ function selectDemoQuestions() {
       (correctSelected - incorrectSelected) / correctSet.size
     );
 
+    // Az ellenőrzés megtörtént: a válaszok zárolása
+    answered = true;
+    answeredChecked = checkedIndices.slice();
+    optionsContainerEl.querySelectorAll('input').forEach(inp => {
+      inp.disabled = true;
+    });
+    optionsContainerEl.querySelectorAll('.option-item').forEach(item => {
+      item.classList.add('locked');
+    });
+
     if (fraction === 1) {
       showFeedback('correct', q, fraction);
     } else if (fraction > 0) {
@@ -772,12 +832,26 @@ function selectDemoQuestions() {
     }
 
     userScore += fraction;
+    questionResults.push({
+      category: q.category,
+      fraction: fraction
+    });
+
+    // A bejelölt válaszok azonnal mentésre kerülnek (frissítés után is megmaradnak)
+    saveProgress();
+  }
+
+  checkBtn.addEventListener('click', () => {
+    if (answered) return; // már ellenőrizve, nem lehet újra
+
+    const inputs = [...optionsContainerEl.querySelectorAll('input')];
     
-questionResults.push({
-  category: q.category,
-  fraction: fraction
-});
-    
+    // Indices that the user checked
+    const checkedIndices = inputs
+      .filter(inp => inp.checked)
+      .map(inp => parseInt(inp.value));
+
+    submitAnswer(checkedIndices);
   });
 
   /******************************************************
