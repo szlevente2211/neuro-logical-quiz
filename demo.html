@@ -305,6 +305,53 @@
     footer p {
       color: var(--muted);
     }
+/* ========== SZEMÉLYRE SZABOTT VÉGSŐ VISSZAJELZÉS ========== */
+.final-feedback {
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+  line-height: 1.6;
+  border: 1px solid transparent;
+}
+
+.final-feedback p {
+  margin: 0 0 12px;
+}
+
+.final-feedback p:last-child {
+  margin-bottom: 0;
+}
+
+.final-feedback ul {
+  margin: 8px 0 0;
+  padding-left: 24px;
+}
+
+.final-feedback li {
+  margin: 5px 0;
+}
+
+.final-feedback.fail {
+  background-color: #fde8e8;
+  color: #991b1b;
+  border-color: #f5b5b5;
+}
+
+.final-feedback.medium {
+  background-color: #fff4cc;
+  color: #854d0e;
+  border-color: #f2d675;
+}
+
+.final-feedback.excellent {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #86d9a4;
+}
+
+
+    
   </style>
 </head>
 <body>
@@ -330,9 +377,10 @@
     </div>
 
     <div class="score-container hidden" id="score-container">
-      <h2>Végső eredményed:</h2>
-      <div id="score-percent"></div>
-    </div>
+  <h2>Végső eredményed:</h2>
+  <div id="score-percent"></div>
+  <div id="final-feedback" class="final-feedback"></div>
+</div>
   </div>
 
   <script>
@@ -356,6 +404,7 @@
   let userScore = 0; //  scores for multiple-choice
   let timerInterval = null;
   let timeRemaining = 0;
+  let questionResults = [];
 
   // --- Folytatás frissítés után ---
   let originalPool = [];          // a kérdések az eredeti sorrendben
@@ -575,6 +624,7 @@ function selectDemoQuestions() {
       currentIndex = 0;
       userScore = 0;
       timeRemaining = config.totalTime;
+      questionResults = [];
     }
     feedbackEl.style.display = 'none';
     nextBtn.classList.add('hidden');
@@ -712,6 +762,12 @@ function selectDemoQuestions() {
     }
 
     userScore += fraction;
+    
+questionResults.push({
+  category: q.category,
+  fraction: fraction
+});
+    
   });
 
   /******************************************************
@@ -762,10 +818,153 @@ function selectDemoQuestions() {
     renderQuestion();
   });
 
+    
+
   /******************************************************
    * 10) END QUIZ
    ******************************************************/
-  function endQuiz() {
+
+
+    
+  function renderFinalFeedback(finalScore) {
+  const feedbackEl = document.getElementById('final-feedback');
+
+  // Kategórianevek egységesítése az összehasonlításhoz
+  function normalizeCategory(category) {
+    const c = String(category || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '');
+
+    if (c === 'retina') return 'retina';
+    if (c.startsWith('latopalya')) return 'latopalya';
+
+    if (c.includes('kergi') && c.includes('feldolgozas')) {
+      return 'kergifeldolgozas';
+    }
+
+    if (c.includes('nemtudatos') && c.includes('palya')) {
+      return 'nemtudatospalyak';
+    }
+
+    return c;
+  }
+
+  const categoryNames = {
+    retina: 'Retina',
+    latopalya: 'Látópálya',
+    kergifeldolgozas: 'Kérgi feldolgozás',
+    nemtudatospalyak: 'Nem tudatos pályák'
+  };
+
+  // Kategóriánkénti pontszámok összesítése
+  const categoryScores = {};
+
+  for (const result of questionResults) {
+    const key = normalizeCategory(result.category);
+
+    if (!categoryScores[key]) {
+      categoryScores[key] = {
+        score: 0,
+        count: 0
+      };
+    }
+
+    categoryScores[key].score += result.fraction;
+    categoryScores[key].count++;
+  }
+
+  const categoryResults = Object.entries(categoryScores).map(
+    ([key, data]) => ({
+      name: categoryNames[key] || key,
+      percentage: (data.score / data.count) * 100
+    })
+  );
+
+  // A kategóriákat a leggyengébb eredménytől rendezzük
+  categoryResults.sort((a, b) => a.percentage - b.percentage);
+
+  let level;
+  let heading;
+  let description = '';
+  let threshold;
+
+  if (finalScore <= 50) {
+    level = 'fail';
+    heading = 'Sajnáljuk, de ez most nem sikerült.';
+    description =
+      'Erősen javasoljuk az alábbi témák átnézését:';
+    threshold = 60;
+
+  } else if (finalScore <= 80) {
+    level = 'medium';
+    heading = 'Gratulálunk, sikeresen teljesítetted a vizsgát!';
+    description =
+      'De ha szeretnél jobb eredményt elérni, akkor javasoljuk az alábbi témák átnézését:';
+    threshold = 82;
+
+  } else {
+    level = 'excellent';
+    heading = 'Gratulálunk! Kiválóan teljesítetted a vizsgát!';
+    threshold = 80;
+  }
+
+  const weakCategories = categoryResults.filter(
+    category => category.percentage < threshold
+  );
+
+  // Biztonságos HTML-építés
+  feedbackEl.replaceChildren();
+  feedbackEl.className = `final-feedback ${level}`;
+
+  const headingEl = document.createElement('p');
+  const strongEl = document.createElement('strong');
+  strongEl.textContent = heading;
+  headingEl.appendChild(strongEl);
+  feedbackEl.appendChild(headingEl);
+
+  if (level === 'excellent') {
+    if (weakCategories.length > 0) {
+      const intro = document.createElement('p');
+      intro.textContent =
+        'Ezekre a témákra azért még figyelj, mert nem mennek tökéletesen:';
+      feedbackEl.appendChild(intro);
+    } else {
+      const restMessage = document.createElement('p');
+      restMessage.textContent =
+        'Most menj és élvezd a jól megérdemelt pihenést!';
+      feedbackEl.appendChild(restMessage);
+    }
+
+  } else {
+    const intro = document.createElement('p');
+    intro.textContent = description;
+    feedbackEl.appendChild(intro);
+
+    if (weakCategories.length === 0) {
+      const message = document.createElement('p');
+      message.textContent =
+        'A megadott küszöbérték alatt nincs fejlesztendő kategóriád.';
+      feedbackEl.appendChild(message);
+    }
+  }
+
+  if (weakCategories.length > 0) {
+    const list = document.createElement('ul');
+
+    for (const category of weakCategories) {
+      const item = document.createElement('li');
+      item.textContent =
+        `${category.name} — ${category.percentage.toFixed(0)}%`;
+      list.appendChild(item);
+    }
+
+    feedbackEl.appendChild(list);
+  }
+}
+    
+    function endQuiz() {
     clearInterval(timerInterval);
     timerInterval = null;
     clearProgress(); // a befejezett teszt után frissítéskor újraindul
@@ -773,8 +972,12 @@ function selectDemoQuestions() {
 
     // Convert userScore to a final percentage
     const finalScore = (userScore / selectedQuestions.length) * 100;
-    scorePercentEl.textContent = finalScore.toFixed(2) + '%';
-    scoreContainerEl.classList.remove('hidden');
+
+scorePercentEl.textContent = finalScore.toFixed(2) + '%';
+
+renderFinalFeedback(finalScore);
+
+scoreContainerEl.classList.remove('hidden');
   }
 
   /******************************************************
