@@ -424,14 +424,14 @@ let questionResults = [];
   // Mentett adat olvasása a helyi tárolókból (localStorage → sessionStorage → window.name)
   function readLocalRaw() {
     let v = null;
-    try { v = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    try { v = localStorage.getItem(STORAGE_KEY); }  (e) {}
     if (v) return v;
-    try { v = sessionStorage.getItem(STORAGE_KEY); } catch (e) {}
+    try { v = sessionStorage.getItem(STORAGE_KEY); }  (e) {}
     if (v) return v;
     try {
       const n = String(window.name || '');
       if (n.indexOf(NAME_PREFIX) === 0) return n.slice(NAME_PREFIX.length);
-    } catch (e) {}
+    }  (e) {}
     return null;
   }
 
@@ -439,7 +439,7 @@ let questionResults = [];
   function postToParent(msg) {
     try {
       if (window.parent !== window) window.parent.postMessage(msg, '*');
-    } catch (e) {}
+    }  (e) {}
   }
 
   function saveProgress() {
@@ -452,17 +452,17 @@ let questionResults = [];
       questionResults: questionResults,
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
-    try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
-    try { sessionStorage.setItem(STORAGE_KEY, json); } catch (e) {}
-    try { window.name = NAME_PREFIX + json; } catch (e) {}
+    try { localStorage.setItem(STORAGE_KEY, json); }  (e) {}
+    try { sessionStorage.setItem(STORAGE_KEY, json); }  (e) {}
+    try { window.name = NAME_PREFIX + json; }  (e) {}
     // 2) a beágyazó oldal tárolójába is (iframe-ben ez megbízhatóbb)
     postToParent({ type: 'quiz-save', state: json });
   }
 
   function clearProgress() {
-    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-    try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
-    try { if (String(window.name).indexOf(NAME_PREFIX) === 0) window.name = ''; } catch (e) {}
+    try { localStorage.removeItem(STORAGE_KEY); }  (e) {}
+    try { sessionStorage.removeItem(STORAGE_KEY); }  (e) {}
+    try { if (String(window.name).indexOf(NAME_PREFIX) === 0) window.name = ''; }  (e) {}
     postToParent({ type: 'quiz-clear' });
   }
 
@@ -519,7 +519,7 @@ let questionResults = [];
     ? s.questionResults
     : []
 };
-    } catch (e) {
+    }  (e) {
       return null;
     }
   }
@@ -554,9 +554,10 @@ let questionResults = [];
 
     initQuiz(loadProgress(await getSavedRaw()));
   } catch (error) {
-    console.error(error);
-    questionTextEl.textContent = 'A kérdésbank betöltése sikertelen.';
-  }
+  console.error('Kérdésbank betöltési hiba:', error);
+  questionTextEl.textContent =
+    'A kérdésbank betöltése sikertelen: ' + error.message;
+}
 });
 
   function initQuiz(saved) {
