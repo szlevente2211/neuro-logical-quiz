@@ -408,7 +408,7 @@
 
   // --- Folytatás frissítés után ---
   let originalPool = [];          // a kérdések az eredeti sorrendben
-  let scoreAtQuestionStart = 0;   // a pontszám az aktuális kérdés kezdetekor
+  let  = 0;   // a pontszám az aktuális kérdés kezdetekor
   const STORAGE_KEY = 'neurokviz_progress_v2';
   const NAME_PREFIX = 'neurokviz:';  // a window.name tartalék előtagja
 
@@ -449,7 +449,7 @@
       currentId: qKey(selectedQuestions[currentIndex]), // melyik id-nál tartott
       currentIndex: currentIndex,
       score: scoreAtQuestionStart,
-      timeRemaining: timeRemaining
+      timeRemaining: timeRemaining,
       questionResults: questionResults,
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
