@@ -325,12 +325,12 @@
 
       <div class="navigation-row">
         <button id="check-btn">Ellenőrzés</button>
-        <button id="next-btn" class="hidden">Next Question</button>
+        <button id="next-btn" class="hidden">Következő kérdés</button>
       </div>
     </div>
 
     <div class="score-container hidden" id="score-container">
-      <h2>Your final score:</h2>
+      <h2>Végső eredményed:</h2>
       <div id="score-percent"></div>
     </div>
   </div>
@@ -674,16 +674,16 @@
 
     if (status === 'correct') {
       feedbackEl.classList.add('correct');
-      feedbackEl.innerHTML = 'Correct!';
+      feedbackEl.innerHTML = 'Helyes!';
     } else if (status === 'partial') {
       feedbackEl.classList.add('partial');
       const percent = (fraction * 100).toFixed(0);
-      feedbackEl.innerHTML = `Partially correct (${percent}%).<br/>
-        Correct answers: ${correctAnswersText}`;
+      feedbackEl.innerHTML = `Részben helyes (${percent}%).<br/>
+        Helyes válaszok: ${correctAnswersText}`;
     } else {
       feedbackEl.classList.add('incorrect');
-      feedbackEl.innerHTML = `Incorrect!<br/>
-        Correct answers: ${correctAnswersText}`;
+      feedbackEl.innerHTML = `Helytelen!<br/>
+        Helyes válaszok: ${correctAnswersText}`;
     }
 
     // Hide check button, show next
