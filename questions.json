@@ -7,7 +7,7 @@
       "A retina a diencephalonból származó neuroectodermalis struktúra.",
       "A retina a felszíni ectodermából fejlődik.",
       "A retina a mesencephalonból fejlődik.",
-      "A retina a neuralis crestből fejlődik.",
+      "A retina a dúclécből fejlődik.",
       "A retina a perifériás érzőidegekhez hasonlóan fejlődik."
     ],
     "correctAnswers": [
@@ -323,16 +323,16 @@
     "category": "latopalya",
     "question": "Mely rostok kereszteződnek a chiasma opticumban?",
     "options": [
-      "A nasalis retinafélből származó rostok",
+      "A felső retinafélből származó összes rost",
       "A temporalis retinafélből származó rostok",
-      "Mindkét szem nasalis retinafeléből származó rostok",
-      "A jobb szem és a bal szem összes rostja az ellenkező oldalra"
+      "Mindkét szem nasalis retinafeléből származó összes rost",
+      "A jobb szem és a bal szem összes rostja az ellenkező oldalra",
+      "Az alsó retinafélből származó összes rost"
     ],
     "correctAnswers": [
-      0,
       2
     ],
-    "type": "multiple"
+    "type": "single"
   },
   {
     "id": 20,
@@ -762,7 +762,7 @@
       "A parietalis vizuális hálózatok sérülésével összefügghet",
       "Kétoldali temporalis/inferotemporalis vizuális hálózatok sérülésével összefügghet",
       "A beteg képes lehet felismerni, hogy egy arcot lát.",
-      "Az arc tulajdonosának azonosítása mégis zavart lehet.",
+      "Az arc tulajdonosának azonosítása zavart lehet.",
       "Szükségszerűen teljes corticalis vaksággal jár."
     ],
     "correctAnswers": [
