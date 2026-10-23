@@ -498,10 +498,63 @@
     initQuiz(loadProgress(await getSavedRaw()));
   } catch (error) {
     console.error(error);
-    questionTextEl.textContent = 'A kérdésbank betöltése sikertelen.';
+    questionTextEl.textContent =
+  error.message || 'A kérdésbank betöltése sikertelen.';
   }
 });
 
+function selectDemoQuestions() {
+  // Ékezetek és szóközök normalizálása,
+  // hogy a kategórianevek és slugok is működjenek.
+  function normalizeCategory(category) {
+    const c = String(category || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '');
+
+    if (c === 'retina') return 'retina';
+    if (c.startsWith('latopalya')) return 'latopalya';
+    if (c.includes('kergi') && c.includes('feldolgozas')) {
+      return 'kergifeldolgozas';
+    }
+    if (c.includes('nemtudatos') && c.includes('palya')) {
+      return 'nemtudatospalyak';
+    }
+
+    return c;
+  }
+
+  const requirements = [
+    { category: 'retina', count: 1 },
+    { category: 'latopalya', count: 2 },
+    { category: 'kergifeldolgozas', count: 1 },
+    { category: 'nemtudatospalyak', count: 1 }
+  ];
+
+  const selected = [];
+
+  for (const requirement of requirements) {
+    const matching = questionPool.filter(q =>
+      normalizeCategory(q.category) === requirement.category
+    );
+
+    if (matching.length < requirement.count) {
+      throw new Error(
+        `Nincs elég kérdés a(z) "${requirement.category}" kategóriában. ` +
+        `Szükséges: ${requirement.count}, elérhető: ${matching.length}.`
+      );
+    }
+
+    // Véletlenszerű kiválasztás ismétlés nélkül.
+    const shuffled = [...matching].sort(() => Math.random() - 0.5);
+    selected.push(...shuffled.slice(0, requirement.count));
+  }
+
+  // A kiválasztott 5 kérdés sorrendjét is keverjük.
+  return selected.sort(() => Math.random() - 0.5);
+}
+    
   function initQuiz(saved) {
     if (saved) {
       // Folytatás ott, ahol abbahagyta
@@ -515,9 +568,8 @@
       if (sec < 10) sec = '0' + sec;
       timerEl.textContent = `${m}:${sec}`;
     } else {
-      // Shuffle and pick N questions
-      const shuffled = questionPool.sort(() => Math.random() - 0.5);
-      selectedQuestions = shuffled.slice(0, config.questionsToPick);
+      
+      selectedQuestions = selectDemoQuestions();
 
       // Reset state
       currentIndex = 0;
