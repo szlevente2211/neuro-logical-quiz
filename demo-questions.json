@@ -1,1 +1,178 @@
-
+[
+  {
+    "id": 1,
+    "category": "retina",
+    "question": "Melyik állítás igaz a retina fejlődési eredetére?",
+    "options": [
+      "A retina a diencephalonból származó neuroectodermalis struktúra.",
+      "A retina a felszíni ectodermából fejlődik.",
+      "A retina a mesencephalonból fejlődik.",
+      "A retina a neuralis dúclécből fejlődik.",
+      "A retina a perifériás érzőidegekhez hasonlóan fejlődik."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "type": "single"
+  },
+  {
+    "id": 2,
+    "category": "retina",
+    "question": "Mely állítások igazak a magnocellularis és parvocellularis rendszerekre?",
+    "options": [
+      "A magnocellularis rendszer nagyobb receptív mezőkkel jellemezhető.",
+      "A parvocellularis rendszer nagyobb térbeli felbontásra képes.",
+      "A parvocellularis rendszer fontos a mozgás és időbeli változások feldolgozásában.",
+      "A magnocellularis rendszer fontos a finom részletek és forma feldolgozásában.",
+      "A két rendszer teljesen független a retina korábbi feldolgozásától."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 3,
+    "category": "latopalya",
+    "question": "Mely állítások igazak a retina és a látótér viszonyára?",
+    "options": [
+      "A temporalis látótér a nasalis retinafélre vetül.",
+      "A nasalis látótér a temporalis retinafélre vetül.",
+      "A temporalis látótér a temporalis retinafélre vetül.",
+      "A felső látótér az a felső retinafélre vetül.",
+      "A nasalis látótér a nasalis retinafélre vetül."
+    ],
+    "correctAnswers": [
+      0,
+      1
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 4,
+    "category": "latopalya",
+    "question": "Mely rostok kereszteződnek a chiasma opticumban?",
+    "options": [
+      "A felső retinafélből származó összes rost",
+      "A temporalis retinafélből származó rostok",
+      "Mindkét szem nasalis retinafeléből származó összes rost",
+      "A jobb szem és a bal szem összes rostja az ellenkező oldalra",
+      "Az alsó retinafélből származó összes rost"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "type": "single"
+  },
+  {
+    "id": 5,
+    "category": "latopalya",
+    "question": "Melyik állítás igaz a chiasma opticum sérülésére?",
+    "options": [
+      "Bitemporalis hemianopsia alakulhat ki.",
+      "Binasalis hemianopsia alakul ki.",
+      "Mindkét szem teljes vaksága alakul ki.",
+      "A nervus opticus izolált sérülésével azonos kiesés jön létre.",
+      "A kiesés kizárólag a macularis látást érinti."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "type": "single"
+  },
+  {
+    "id": 6,
+    "category": "latopalya",
+    "question": "Mely rétegekben van kontralaterális reprezentáció a corpus geniculatum lateraléban?",
+    "options": [
+      "1. réteg",
+      "2. réteg",
+      "3. réteg",
+      "4. réteg",
+      "5. réteg",
+      "6. réteg"
+    ],
+    "correctAnswers": [
+      0,
+      3,
+      5
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 7,
+    "category": "kergi_feldolgozas",
+    "question": "Melyik állítások kapcsolhatók a prosopagnosiához?",
+    "options": [
+      "A parietalis vizuális hálózatok sérülésével összefügghet",
+      "Kétoldali temporalis/inferotemporalis vizuális hálózatok sérülésével összefügghet",
+      "A beteg képes lehet felismerni, hogy egy arcot lát.",
+      "Az arc tulajdonosának azonosítása zavart lehet.",
+      "Szükségszerűen teljes corticalis vaksággal jár."
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 8,
+    "category": "kergi_feldolgozas",
+    "question": "Mely állítások igazak a ventralis vizuális pályára?",
+    "options": [
+      "A temporalis lebeny irányába halad.",
+      "Fontos a tárgyak felismerésében.",
+      "Fontos az arcok felismerésében.",
+      "A „Hol?” kérdéshez kapcsolódó feldolgozásban vesz részt.",
+      "A parietalis lebeny irányába halad."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 9,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely struktúrák vesznek részt a pupillareflex klasszikus afferens-efferens ívében?",
+    "options": [
+      "A IV-es agyideg",
+      "A II-es agyideg",
+      "A III-as agyideg",
+      "A VI-os agyideg",
+      "Pretectalis area",
+      "Edinger–Westphal-mag"
+    ],
+    "correctAnswers": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "type": "multiple"
+  },
+  {
+    "id": 10,
+    "category": "nem_tudatos_palyak",
+    "question": "Mely struktúrák kapcsolhatók a corneareflex afferens oldalához?",
+    "options": [
+      "Cornea érző végződései",
+      "Nervus ophthalmicus (V1)",
+      "Nervus nasociliaris",
+      "Ganglion trigeminale",
+      "Nervus facialis motoros magja"
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "type": "multiple"
+  }
+]
