@@ -167,7 +167,7 @@
       color: #7f1d1d;
       border: 1px solid #f1a8a8;
     }
-    .feedback.partial {
+    .feedback. {
       background-color: #fff3cd; /* Light yellow */
       color: #6b4e00;
       border: 1px solid #f0d78a;
@@ -230,7 +230,7 @@
       color: #fff;
       border-color: #d24848;
     }
-    .dark-mode .feedback.partial {
+    .dark-mode .feedback. {
       background-color: #e6b422;
       color: #000;
       border-color: #f0c840;
@@ -353,7 +353,7 @@
    ******************************************************/
    let selectedQuestions = [];
   let currentIndex = 0;
-  let userScore = 0; // partial scores for multiple-choice
+  let userScore = 0; //  scores for multiple-choice
   let timerInterval = null;
   let timeRemaining = 0;
 
@@ -726,16 +726,16 @@ function selectDemoQuestions() {
 
     if (status === 'correct') {
       feedbackEl.classList.add('correct');
-      feedbackEl.innerHTML = 'Correct!';
+      feedbackEl.innerHTML = 'Helyes!';
     } else if (status === 'partial') {
       feedbackEl.classList.add('partial');
       const percent = (fraction * 100).toFixed(0);
-      feedbackEl.innerHTML = `Partially correct (${percent}%).<br/>
+      feedbackEl.innerHTML = `Részben helyes (${percent}%).<br/>
         Correct answers: ${correctAnswersText}`;
     } else {
       feedbackEl.classList.add('incorrect');
-      feedbackEl.innerHTML = `Incorrect!<br/>
-        Correct answers: ${correctAnswersText}`;
+      feedbackEl.innerHTML = `Helytelen!<br/>
+        Helyes válaszok: ${correctAnswersText}`;
     }
 
     // Hide check button, show next
