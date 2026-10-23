@@ -786,35 +786,36 @@ let questionResults = [];
 function renderFinalFeedback(finalScore) {
   const feedbackEl = document.getElementById('final-feedback');
 
+  // Kategórianevek egységesítése az összehasonlításhoz
   function normalizeCategory(category) {
-    return String(category || '')
+    const c = String(category || '')
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '');
-  }
 
-  function getCategoryName(key) {
-    if (key === 'retina') return 'Retina';
-    if (key.startsWith('latopalya')) return 'Látópálya';
+    if (c === 'retina') return 'retina';
+    if (c.startsWith('latopalya')) return 'latopalya';
 
-    if (key.includes('kergi') && key.includes('feldolgozas')) {
-      return 'Kérgi feldolgozás';
+    if (c.includes('kergi') && c.includes('feldolgozas')) {
+      return 'kergifeldolgozas';
     }
 
-    if (key.includes('nemtudatos') && key.includes('palya')) {
-      return 'Nem tudatos pályák';
+    if (c.includes('nemtudatos') && c.includes('palya')) {
+      return 'nemtudatospalyak';
     }
 
-    // Ismeretlen kategóriánál az eredeti elnevezést használjuk.
-    const result = questionResults.find(
-      r => normalizeCategory(r.category) === key
-    );
-
-    return result ? result.category : key;
+    return c;
   }
 
-  // Kategóriánként összesítjük a kérdések pontszámait.
+  const categoryNames = {
+    retina: 'Retina',
+    latopalya: 'Látópálya',
+    kergifeldolgozas: 'Kérgi feldolgozás',
+    nemtudatospalyak: 'Nem tudatos pályák'
+  };
+
+  // Kategóriánkénti pontszámok összesítése
   const categoryScores = {};
 
   for (const result of questionResults) {
@@ -833,14 +834,12 @@ function renderFinalFeedback(finalScore) {
 
   const categoryResults = Object.entries(categoryScores).map(
     ([key, data]) => ({
-      name: getCategoryName(key),
-      percentage: data.count
-        ? (data.score / data.count) * 100
-        : 0
+      name: categoryNames[key] || key,
+      percentage: (data.score / data.count) * 100
     })
   );
 
-  // A leggyengébb kategória jelenjen meg elsőként.
+  // A kategóriákat a leggyengébb eredménytől rendezzük
   categoryResults.sort((a, b) => a.percentage - b.percentage);
 
   let level;
@@ -854,12 +853,14 @@ function renderFinalFeedback(finalScore) {
     description =
       'Erősen javasoljuk az alábbi témák átnézését:';
     threshold = 60;
+
   } else if (finalScore <= 80) {
     level = 'medium';
     heading = 'Gratulálunk, sikeresen teljesítetted a vizsgát!';
     description =
       'De ha szeretnél jobb eredményt elérni, akkor javasoljuk az alábbi témák átnézését:';
     threshold = 82;
+
   } else {
     level = 'excellent';
     heading = 'Gratulálunk! Kiválóan teljesítetted a vizsgát!';
@@ -870,12 +871,12 @@ function renderFinalFeedback(finalScore) {
     category => category.percentage < threshold
   );
 
+  // Biztonságos HTML-építés
   feedbackEl.replaceChildren();
   feedbackEl.className = `final-feedback ${level}`;
 
   const headingEl = document.createElement('p');
   const strongEl = document.createElement('strong');
-
   strongEl.textContent = heading;
   headingEl.appendChild(strongEl);
   feedbackEl.appendChild(headingEl);
@@ -892,6 +893,7 @@ function renderFinalFeedback(finalScore) {
         'Most menj és élvezd a jól megérdemelt pihenést!';
       feedbackEl.appendChild(restMessage);
     }
+
   } else {
     const intro = document.createElement('p');
     intro.textContent = description;
@@ -910,17 +912,15 @@ function renderFinalFeedback(finalScore) {
 
     for (const category of weakCategories) {
       const item = document.createElement('li');
-
       item.textContent =
         `${category.name} — ${category.percentage.toFixed(0)}%`;
-
       list.appendChild(item);
     }
 
     feedbackEl.appendChild(list);
   }
 }
-
+    
     
   function endQuiz() {
     clearInterval(timerInterval);
