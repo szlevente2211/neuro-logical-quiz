@@ -279,7 +279,7 @@
     .navigation-row button {
       margin-bottom: 0;
     }
-    .-container {
+    .score-container {
       text-align: center;
       margin: 20px 0 0;
       padding: 32px 20px;
@@ -289,11 +289,11 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
-    .-container h2 {
+    .score-container h2 {
       margin: 0 0 8px;
       color: var(--brand-900);
     }
-    #-percent {
+    #score-percent {
       font-size: 2.6rem;
       font-weight: 800;
       color: var(--brand-600);
@@ -375,9 +375,9 @@
       </div>
     </div>
 
-   <div class="-container hidden" id="-container">
+   <div class="score-container hidden" id="score-container">
   <h2>Végső eredményed:</h2>
-  <div id="-percent"></div>
+  <div id="score-percent"></div>
   <div id="final-feedback" class="final-feedback"></div>
 </div>
   </div>
@@ -400,7 +400,7 @@
    ******************************************************/
   let selectedQuestions = [];
 let currentIndex = 0;
-let user = 0;
+let userScore = 0; // scores for multiple-choice
 let timerInterval = null;
 let timeRemaining = 0;
 let questionResults = [];
@@ -424,14 +424,14 @@ let questionResults = [];
   // Mentett adat olvasása a helyi tárolókból (localStorage → sessionStorage → window.name)
   function readLocalRaw() {
     let v = null;
-    try { v = localStorage.getItem(STORAGE_KEY); }  (e) {}
+    try { v = localStorage.getItem(STORAGE_KEY); } catch (e) {}
     if (v) return v;
-    try { v = sessionStorage.getItem(STORAGE_KEY); }  (e) {}
+    try { v = sessionStorage.getItem(STORAGE_KEY); } catch (e) {}
     if (v) return v;
     try {
       const n = String(window.name || '');
       if (n.indexOf(NAME_PREFIX) === 0) return n.slice(NAME_PREFIX.length);
-    }  (e) {}
+    } catch (e) {}
     return null;
   }
 
@@ -439,7 +439,7 @@ let questionResults = [];
   function postToParent(msg) {
     try {
       if (window.parent !== window) window.parent.postMessage(msg, '*');
-    }  (e) {}
+    } catch (e) {}
   }
 
   function saveProgress() {
@@ -452,17 +452,17 @@ let questionResults = [];
       questionResults: questionResults,
     });
     // 1) a kvíz saját tárolójába (ha a böngésző engedi) – több helyre, tartalékként
-    try { localStorage.setItem(STORAGE_KEY, json); }  (e) {}
-    try { sessionStorage.setItem(STORAGE_KEY, json); }  (e) {}
-    try { window.name = NAME_PREFIX + json; }  (e) {}
+    try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
+    try { sessionStorage.setItem(STORAGE_KEY, json); } catch (e) {}
+    try { window.name = NAME_PREFIX + json; } catch (e) {}
     // 2) a beágyazó oldal tárolójába is (iframe-ben ez megbízhatóbb)
     postToParent({ type: 'quiz-save', state: json });
   }
 
   function clearProgress() {
-    try { localStorage.removeItem(STORAGE_KEY); }  (e) {}
-    try { sessionStorage.removeItem(STORAGE_KEY); }  (e) {}
-    try { if (String(window.name).indexOf(NAME_PREFIX) === 0) window.name = ''; }  (e) {}
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    try { if (String(window.name).indexOf(NAME_PREFIX) === 0) window.name = ''; } catch (e) {}
     postToParent({ type: 'quiz-clear' });
   }
 
@@ -519,7 +519,7 @@ let questionResults = [];
     ? s.questionResults
     : []
 };
-    }  (e) {
+    } catch (e) {
       return null;
     }
   }
