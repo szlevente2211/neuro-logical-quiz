@@ -366,6 +366,33 @@
   color: #166534;
   border-color: #86d9a4;
 }
+    /* ========== NEUROLOGICAL AJÁNLÁS ========== */
+.neuro-recommendation {
+  margin-top: 16px;
+  padding: 18px 20px 18px 22px;
+  border-radius: 10px;
+  text-align: left;
+  line-height: 1.6;
+  background-color: #183353;
+  color: #f4f6f9;
+  border: 1px solid #364c67;
+  border-left: 5px solid #c9971f;
+}
+
+.neuro-recommendation__brand {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c9971f;
+}
+
+.neuro-recommendation p {
+  margin: 0;
+  font-weight: 500;
+}
 
 
     
@@ -397,6 +424,7 @@
   <h2>Végső eredményed:</h2>
   <div id="score-percent"></div>
   <div id="final-feedback" class="final-feedback"></div>
+  <div id="neuro-recommendation" class="neuro-recommendation hidden"></div>
 </div>
   </div>
 
@@ -1046,6 +1074,41 @@ function selectDemoQuestions() {
 
     feedbackEl.appendChild(list);
   }
+
+  // NeuroLogical ajánlás a személyes visszajelzés alatt
+  renderNeuroRecommendation(level, weakCategories.length > 0);
+}
+
+function renderNeuroRecommendation(level, hasWeakCategory) {
+  const boxEl = document.getElementById('neuro-recommendation');
+
+  const messages = {
+    fail:
+      'Ne aggódj, szerencsére a NeuroLogical segítségével gyorsan és hatékonyan tudod elsajátítani ezeket a témákat.',
+    medium:
+      'Szerencsére a NeuroLogical segítségével gyorsan és hatékonyan tudod elsajátítani ezeket a témákat.',
+    excellent:
+      'Ha szeretnél biztosra menni, a NeuroLogical segítségével ki tudod maxolni a benned lévő potenciált.'
+  };
+
+  boxEl.replaceChildren();
+
+  // 80% felett csak akkor jelenik meg, ha van 80% alatti témája
+  if (level === 'excellent' && !hasWeakCategory) {
+    boxEl.classList.add('hidden');
+    return;
+  }
+
+  const brandEl = document.createElement('span');
+  brandEl.className = 'neuro-recommendation__brand';
+  brandEl.textContent = 'NeuroLogical ajánlás';
+
+  const textEl = document.createElement('p');
+  textEl.textContent = messages[level] || '';
+
+  boxEl.appendChild(brandEl);
+  boxEl.appendChild(textEl);
+  boxEl.classList.remove('hidden');
 }
     
     function endQuiz() {
