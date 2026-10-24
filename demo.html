@@ -490,8 +490,7 @@
     } catch (e) {}
   }
 
-  // Görgetés kérése a beágyazó oldaltól ('bottom' = a kvíz aljára, 'top' = a tetejére).
-  // A tényleges görgetést a beágyazó oldal végzi, és csak mobil nézetben.
+   // Görgetés kérése a beágyazó oldaltól ('bottom' = a kvíz aljára, 'top' = a tetejére).
   // A kis késleltetés azért kell, hogy a beágyazó oldal előbb megkapja az új magasságot.
   function requestScroll(where) {
     setTimeout(() => {
