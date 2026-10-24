@@ -373,9 +373,9 @@
   border-radius: 10px;
   text-align: left;
   line-height: 1.6;
-  background-color: rgba(24, 51, 83, 0.2);  /* márkakék, 20% átlátszatlanság */
-  color: #183353;                           /* ugyanez a kék, 100% */
-  border: 1px solid rgba(24, 51, 83, 0.2);
+  background-color: rgba(62, 114, 180, 0.18);  /* világosabb kék háttér */
+  color: #183353;                              /* a doboz szövege: márkakék, 100% */
+  border: 1px solid rgba(62, 114, 180, 0.30);
   border-top: 5px solid #c9971f;            /* az aranysárga vonal a doboz tetején */
 }
 
@@ -384,13 +384,7 @@
   margin-bottom: 6px;
   font-size: 1rem;
   font-weight: 700;
-  color: #183353;
-}
-
-/* a NeuroLogical szó N és L betűje nagyobb */
-.neuro-recommendation__big {
-  font-size: 1.3em;
-  line-height: 1;
+  color: #c9971f;
 }
 
 .neuro-recommendation p {
@@ -494,6 +488,15 @@
     try {
       if (window.parent !== window) window.parent.postMessage(msg, '*');
     } catch (e) {}
+  }
+
+  // Görgetés kérése a beágyazó oldaltól ('bottom' = a kvíz aljára, 'top' = a tetejére).
+  // A tényleges görgetést a beágyazó oldal végzi, és csak mobil nézetben.
+  // A kis késleltetés azért kell, hogy a beágyazó oldal előbb megkapja az új magasságot.
+  function requestScroll(where) {
+    setTimeout(() => {
+      postToParent({ type: 'quiz-scroll', where: where });
+    }, 150);
   }
 
   function saveProgress() {
@@ -884,6 +887,7 @@ function selectDemoQuestions() {
       .map(inp => parseInt(inp.value));
 
     submitAnswer(checkedIndices);
+    requestScroll('bottom'); // Ellenőrzés után: a kvíz aljára (visszajelzés + Következő gomb)
   });
 
   /******************************************************
@@ -927,11 +931,13 @@ function selectDemoQuestions() {
     currentIndex++;
     if (currentIndex >= selectedQuestions.length) {
       endQuiz();
+      requestScroll('top'); // a végeredmény tetejére
       return;
     }
     nextBtn.classList.add('hidden');
     checkBtn.classList.remove('hidden');
     renderQuestion();
+    requestScroll('top'); // Következő kérdés után: a kvíz tetejére
   });
 
     
@@ -1105,19 +1111,7 @@ function renderNeuroRecommendation(level, hasWeakCategory) {
 
   const brandEl = document.createElement('span');
   brandEl.className = 'neuro-recommendation__brand';
-
-  // "Mit kínál a NeuroLogical?" – az N és az L nagyobb
-  function addBig(letter) {
-    const big = document.createElement('span');
-    big.className = 'neuro-recommendation__big';
-    big.textContent = letter;
-    brandEl.appendChild(big);
-  }
-  brandEl.appendChild(document.createTextNode('Mit kínál a '));
-  addBig('N');
-  brandEl.appendChild(document.createTextNode('euro'));
-  addBig('L');
-  brandEl.appendChild(document.createTextNode('ogical?'));
+  brandEl.textContent = 'Mit kínál a NeuroLogical?';
 
   const textEl = document.createElement('p');
   textEl.textContent = messages[level] || '';
