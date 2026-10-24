@@ -369,24 +369,28 @@
     /* ========== NEUROLOGICAL AJÁNLÁS ========== */
 .neuro-recommendation {
   margin-top: 16px;
-  padding: 18px 20px 18px 22px;
+  padding: 18px 22px 18px 22px;
   border-radius: 10px;
   text-align: left;
   line-height: 1.6;
-  background-color: #183353;
-  color: #f4f6f9;
-  border: 1px solid #364c67;
-  border-left: 5px solid #c9971f;
+  background-color: rgba(24, 51, 83, 0.2);  /* márkakék, 20% átlátszatlanság */
+  color: #183353;                           /* ugyanez a kék, 100% */
+  border: 1px solid rgba(24, 51, 83, 0.2);
+  border-top: 5px solid #c9971f;            /* az aranysárga vonal a doboz tetején */
 }
 
 .neuro-recommendation__brand {
   display: block;
   margin-bottom: 6px;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #c9971f;
+  color: #183353;
+}
+
+/* a NeuroLogical szó N és L betűje nagyobb */
+.neuro-recommendation__big {
+  font-size: 1.3em;
+  line-height: 1;
 }
 
 .neuro-recommendation p {
@@ -1101,7 +1105,19 @@ function renderNeuroRecommendation(level, hasWeakCategory) {
 
   const brandEl = document.createElement('span');
   brandEl.className = 'neuro-recommendation__brand';
-  brandEl.textContent = 'NeuroLogical ajánlás';
+
+  // "Mit kínál a NeuroLogical?" – az N és az L nagyobb
+  function addBig(letter) {
+    const big = document.createElement('span');
+    big.className = 'neuro-recommendation__big';
+    big.textContent = letter;
+    brandEl.appendChild(big);
+  }
+  brandEl.appendChild(document.createTextNode('Mit kínál a '));
+  addBig('N');
+  brandEl.appendChild(document.createTextNode('euro'));
+  addBig('L');
+  brandEl.appendChild(document.createTextNode('ogical?'));
 
   const textEl = document.createElement('p');
   textEl.textContent = messages[level] || '';
