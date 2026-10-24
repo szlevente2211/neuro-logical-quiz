@@ -348,6 +348,24 @@
 .final-feedback li {
   margin: 5px 0;
 }
+    /* ========== NEUROLOGICAL AJÁNLÁS ========== */
+.final-feedback .neurological-recommendation {
+  margin-top: 18px;
+  padding: 14px 16px;
+  background-color: #e4edf9;
+  color: #183353;
+  border: 1px solid #c9971f;
+  border-left: 4px solid #c9971f;
+  border-radius: 8px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.dark-mode .final-feedback .neurological-recommendation {
+  background-color: #12294a;
+  color: #e6edf8;
+  border-color: #c9971f;
+}
 
 .final-feedback.fail {
   background-color: #fde8e8;
@@ -997,6 +1015,22 @@ function selectDemoQuestions() {
   const weakCategories = categoryResults.filter(
     category => category.percentage < threshold
   );
+    
+    // NeuroLogical ajánlás az összesített eredmény és a részpontszámok alapján
+let recommendation = '';
+
+if (finalScore <= 50) {
+  recommendation =
+    'Ne aggódj, szerencsére a NeuroLogical segítségével gyorsan és hatékonyan tudod elsajátítani ezeket a témákat.';
+
+} else if (finalScore <= 80) {
+  recommendation =
+    'Szerencsére a NeuroLogical segítségével gyorsan és hatékonyan tudod elsajátítani ezeket a témákat.';
+
+} else if (weakCategories.length > 0) {
+  recommendation =
+    'Ha szeretnél biztosra menni, a NeuroLogical segítségével ki tudod maxolni a benned lévő potenciált';
+}
 
   // Biztonságos HTML-építés
   feedbackEl.replaceChildren();
@@ -1045,6 +1079,13 @@ function selectDemoQuestions() {
     }
 
     feedbackEl.appendChild(list);
+  }
+  // NeuroLogical ajánlás megjelenítése
+  if (recommendation) {
+    const recommendationEl = document.createElement('p');
+    recommendationEl.className = 'neurological-recommendation';
+    recommendationEl.textContent = recommendation;
+    feedbackEl.appendChild(recommendationEl);
   }
 }
     
