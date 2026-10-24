@@ -434,16 +434,16 @@ let questionResults = [];
 
   // A kérdések azonosítása a questions.json "id" mezője alapján
   // (ha egy kérdésnek nincs id-ja, a sorszámát használjuk)
-  function qKey(q) {
+   qKey(q) {
     if (q && q.id !== undefined && q.id !== null) return String(q.id);
     return 'idx' + originalPool.indexOf(q);
   }
-  function findByKey(key) {
+   findByKey(key) {
     return originalPool.find(q => qKey(q) === String(key)) || null;
   }
 
   // Mentett adat olvasása a helyi tárolókból (localStorage → sessionStorage → window.name)
-  function readLocalRaw() {
+   readLocalRaw() {
     let v = null;
     try { v = localStorage.getItem(STORAGE_KEY); } catch (e) {}
     if (v) return v;
@@ -457,10 +457,25 @@ let questionResults = [];
   }
 
   // Üzenet küldése a beágyazó oldalnak (ha iframe-ben fut)
+   postToParent(msg) {
+    try {
+      if (window.parent !== window) window.parent.postMessage(msg, '*');
+    } catch (e) {}
+  }
+
+     // Üzenet küldése a beágyazó oldalnak (ha iframe-ben fut)
   function postToParent(msg) {
     try {
       if (window.parent !== window) window.parent.postMessage(msg, '*');
     } catch (e) {}
+  }
+
+   // Görgetés kérése a beágyazó oldaltól ('bottom' = a kvíz aljára, 'top' = a tetejére).
+  // A kis késleltetés azért kell, hogy a beágyazó oldal előbb megkapja az új magasságot.
+  function requestScroll(where) {
+    setTimeout(() => {
+      postToParent({ type: 'quiz-scroll', where: where });
+    }, 150);
   }
 
   function saveProgress() {
@@ -798,7 +813,10 @@ let questionResults = [];
       .map(inp => parseInt(inp.value));
 
     submitAnswer(checkedIndices);
+    requestScroll('bottom');
   });
+
+    
 
   /******************************************************
    * 8) SHOW FEEDBACK
@@ -838,15 +856,18 @@ let questionResults = [];
    * 9) NEXT QUESTION
    ******************************************************/
   nextBtn.addEventListener('click', () => {
-    currentIndex++;
+        currentIndex++;
     if (currentIndex >= selectedQuestions.length) {
       endQuiz();
+      requestScroll('top');   // <-- a végeredménynél, az endQuiz() után
       return;
     }
     nextBtn.classList.add('hidden');
     checkBtn.classList.remove('hidden');
     renderQuestion();
-  });
+    requestScroll('top');     // <-- a következő kérdésnél, a renderQuestion() után
+
+    
 
     
 
