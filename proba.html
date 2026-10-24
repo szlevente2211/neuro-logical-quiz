@@ -752,6 +752,85 @@ function selectDemoQuestions() {
    * restoredChecked: ha nem null, akkor az aktuális kérdésnél már
    * megtörtént az ellenőrzés (frissítés után), és ezek a bejelölt válaszok.
    ******************************************************/
+
+    
+/* NeuroLogical – csak a Clarity vizuális tükrözéséhez.
+   Nem módosítja a kvíz válaszait vagy értékelését. */
+function postClarityMirrorState() {
+  try {
+    if (window.parent === window) return;
+
+    // Csak a saját weboldalunkba beágyazott kvíz küldjön állapotot.
+    var parentOrigin;
+    try {
+      parentOrigin = new URL(document.referrer).origin;
+    } catch (e) {
+      return;
+    }
+
+    if (
+      parentOrigin !== 'https://www.neurological.hu' &&
+      parentOrigin !== 'https://neurological.hu'
+    ) {
+      return;
+    }
+
+    function textOf(id) {
+      var el = document.getElementById(id);
+      return el ? el.innerText || el.textContent || '' : '';
+    }
+
+    function visible(id) {
+      var el = document.getElementById(id);
+      return !!el && !el.classList.contains('hidden');
+    }
+
+    var feedback = document.getElementById('feedback');
+    var options = Array.from(
+      document.querySelectorAll('#options-container .option-item')
+    ).map(function (item) {
+      var input = item.querySelector('input');
+      var label = item.querySelector('label');
+
+      return {
+        text: label ? label.innerText || label.textContent : '',
+        selected: !!(input && input.checked),
+        disabled: !!(input && input.disabled),
+        locked: item.classList.contains('locked')
+      };
+    });
+
+    window.parent.postMessage({
+      type: 'nl-clarity-mirror',
+      state: {
+        question: textOf('question-text'),
+        options: options,
+        timer: textOf('timer'),
+        remaining: textOf('questions-remaining'),
+        feedback: textOf('feedback'),
+        feedbackClass: feedback ? feedback.className : '',
+        checkVisible: visible('check-btn'),
+        nextVisible: visible('next-btn'),
+        finished: visible('score-container'),
+        score: textOf('score-percent'),
+        finalFeedback: textOf('final-feedback'),
+        recommendation: textOf('neuro-recommendation')
+      }
+    }, parentOrigin);
+  } catch (e) {
+    // A tükrözés hibája nem szakíthatja meg a kvízt.
+  }
+}
+
+    var clarityMirrorOptions = document.getElementById('options-container');
+
+if (clarityMirrorOptions) {
+  clarityMirrorOptions.addEventListener(
+    'change',
+    postClarityMirrorState
+  );
+}
+
   function renderQuestion(restoredChecked = null) {
     const q = selectedQuestions[currentIndex];
     scoreAtQuestionStart = userScore;
@@ -825,6 +904,7 @@ function selectDemoQuestions() {
 
     // Haladás mentése (frissítés után innen folytatódik)
     saveProgress();
+    postClarityMirrorState();
   }
 
   /******************************************************
@@ -880,6 +960,7 @@ function selectDemoQuestions() {
 
     // A bejelölt válaszok azonnal mentésre kerülnek (frissítés után is megmaradnak)
     saveProgress();
+    postClarityMirrorState();
   }
 
   checkBtn.addEventListener('click', () => {
@@ -1141,6 +1222,7 @@ scorePercentEl.textContent = finalScore.toFixed(2) + '%';
 renderFinalFeedback(finalScore);
 
 scoreContainerEl.classList.remove('hidden');
+      postClarityMirrorState();
   }
 
   /******************************************************
