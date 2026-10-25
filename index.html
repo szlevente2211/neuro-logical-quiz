@@ -322,7 +322,8 @@
     footer p {
       color: var(--muted);
     }
-/* ========== SZEMÉLYRE SZABOTT VÉGSŐ VISSZAJELZÉS ========== */
+
+    /* ========== SZEMÉLYRE SZABOTT VÉGSŐ VISSZAJELZÉS ========== */
 .final-feedback {
   margin-top: 24px;
   padding: 20px;
@@ -366,42 +367,8 @@
   color: #166534;
   border-color: #86d9a4;
 }
-    /* ========== NEUROLOGICAL AJÁNLÁS ========== */
-.neuro-recommendation {
-  margin-top: 16px;
-  padding: 18px 22px 18px 22px;
-  border-radius: 10px;
-  text-align: left;
-  line-height: 1.6;
-  background-color: rgba(62, 114, 180, 0.18);  /* világosabb kék háttér */
-  color: #183353;                              /* a doboz szövege: márkakék, 100% */
-  border: 1px solid rgba(62, 114, 180, 0.30);
-  border-top: 5px solid #c9971f;            /* az aranysárga vonal a doboz tetején */
-}
-
-.neuro-recommendation__brand {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #183353;
-}
-
-.neuro-recommendation p {
-  margin: 0;
-  font-weight: 500;
-}
-
-
     
   </style>
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "yv3p5zpjt6");
-</script>
 </head>
 <body>
   
@@ -425,11 +392,10 @@
       </div>
     </div>
 
-    <div class="score-container hidden" id="score-container">
+   <div class="score-container hidden" id="score-container">
   <h2>Végső eredményed:</h2>
   <div id="score-percent"></div>
   <div id="final-feedback" class="final-feedback"></div>
-  <div id="neuro-recommendation" class="neuro-recommendation hidden"></div>
 </div>
   </div>
 
@@ -439,9 +405,9 @@
      ******************************************************/
     const config = {
       // total time in seconds
-      totalTime: 300,
+      totalTime: 900,
       // how many questions to pick
-      questionsToPick: 5
+      questionsToPick: 10
     };
 
     let questionPool = [];
@@ -449,12 +415,12 @@
   /******************************************************
    * 2) GLOBAL STATE
    ******************************************************/
-   let selectedQuestions = [];
-  let currentIndex = 0;
-  let userScore = 0; //  scores for multiple-choice
-  let timerInterval = null;
-  let timeRemaining = 0;
-  let questionResults = [];
+  let selectedQuestions = [];
+let currentIndex = 0;
+let userScore = 0; // scores for multiple-choice
+let timerInterval = null;
+let timeRemaining = 0;
+let questionResults = [];
 
   // --- Az aktuális kérdés ellenőrzési állapota ---
   let answered = false;           // megnyomta-e már az Ellenőrzés gombot az aktuális kérdésnél
@@ -466,7 +432,7 @@
   const STORAGE_KEY = 'neurokviz_progress_v2';
   const NAME_PREFIX = 'neurokviz:';  // a window.name tartalék előtagja
 
-  // A kérdések azonosítása a demo-questions.json "id" mezője alapján
+  // A kérdések azonosítása a questions.json "id" mezője alapján
   // (ha egy kérdésnek nincs id-ja, a sorszámát használjuk)
   function qKey(q) {
     if (q && q.id !== undefined && q.id !== null) return String(q.id);
@@ -497,7 +463,7 @@
     } catch (e) {}
   }
 
-   // Görgetés kérése a beágyazó oldaltól ('bottom' = a kvíz aljára, 'top' = a tetejére).
+  // Görgetés kérése a beágyazó oldaltól ('bottom' = a kvíz aljára, 'top' = a tetejére).
   // A kis késleltetés azért kell, hogy a beágyazó oldal előbb megkapja az új magasságot.
   function requestScroll(where) {
     setTimeout(() => {
@@ -565,7 +531,7 @@
       const expected = Math.min(config.questionsToPick, originalPool.length);
       if (s.selectedIds.length !== expected) return null;
 
-      // az id-k alapján keressük vissza a kérdéseket a demo-questions.json-ból
+      // az id-k alapján keressük vissza a kérdéseket a questions.json-ból
       const questions = s.selectedIds.map(findByKey);
       if (questions.some(q => !q)) return null; // valamelyik kérdés már nincs meg
 
@@ -620,10 +586,10 @@
    ******************************************************/
   window.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('demo-questions.json');
+    const response = await fetch('questions.json');
 
     if (!response.ok) {
-      throw new Error('Could not load demo-questions.json');
+      throw new Error('Could not load questions.json');
     }
 
     questionPool = await response.json();
@@ -631,64 +597,12 @@
 
     initQuiz(loadProgress(await getSavedRaw()));
   } catch (error) {
-    console.error(error);
-    questionTextEl.textContent =
-  error.message || 'A kérdésbank betöltése sikertelen.';
-  }
+  console.error('Kérdésbank betöltési hiba:', error);
+  questionTextEl.textContent =
+    'A kérdésbank betöltése sikertelen: ' + error.message;
+}
 });
 
-function selectDemoQuestions() {
-  // Ékezetek és szóközök normalizálása,
-  // hogy a kategórianevek és slugok is működjenek.
-  function normalizeCategory(category) {
-    const c = String(category || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '');
-
-    if (c === 'retina') return 'retina';
-    if (c.startsWith('latopalya')) return 'latopalya';
-    if (c.includes('kergi') && c.includes('feldolgozas')) {
-      return 'kergifeldolgozas';
-    }
-    if (c.includes('nemtudatos') && c.includes('palya')) {
-      return 'nemtudatospalyak';
-    }
-
-    return c;
-  }
-
-  const requirements = [
-    { category: 'retina', count: 1 },
-    { category: 'latopalya', count: 2 },
-    { category: 'kergifeldolgozas', count: 1 },
-    { category: 'nemtudatospalyak', count: 1 }
-  ];
-
-  const selected = [];
-
-  for (const requirement of requirements) {
-    const matching = questionPool.filter(q =>
-      normalizeCategory(q.category) === requirement.category
-    );
-
-    if (matching.length < requirement.count) {
-      throw new Error(
-        `Nincs elég kérdés a(z) "${requirement.category}" kategóriában. ` +
-        `Szükséges: ${requirement.count}, elérhető: ${matching.length}.`
-      );
-    }
-
-    // Véletlenszerű kiválasztás ismétlés nélkül.
-    const shuffled = [...matching].sort(() => Math.random() - 0.5);
-    selected.push(...shuffled.slice(0, requirement.count));
-  }
-
-  // A kiválasztott 5 kérdés sorrendjét is keverjük.
-  return selected.sort(() => Math.random() - 0.5);
-}
-    
   function initQuiz(saved) {
     let restoredChecked = null; // ha az aktuális kérdésnél már ellenőrzött, az ő válaszai
 
@@ -706,8 +620,9 @@ function selectDemoQuestions() {
       if (sec < 10) sec = '0' + sec;
       timerEl.textContent = `${m}:${sec}`;
     } else {
-      
-      selectedQuestions = selectDemoQuestions();
+      // Shuffle and pick N questions
+      const shuffled = questionPool.sort(() => Math.random() - 0.5);
+      selectedQuestions = shuffled.slice(0, config.questionsToPick);
 
       // Reset state
       currentIndex = 0;
@@ -749,88 +664,7 @@ function selectDemoQuestions() {
 
   /******************************************************
    * 6) RENDER QUESTION
-   * restoredChecked: ha nem null, akkor az aktuális kérdésnél már
-   * megtörtént az ellenőrzés (frissítés után), és ezek a bejelölt válaszok.
    ******************************************************/
-
-    
-/* NeuroLogical – csak a Clarity vizuális tükrözéséhez.
-   Nem módosítja a kvíz válaszait vagy értékelését. */
-function postClarityMirrorState() {
-  try {
-    if (window.parent === window) return;
-
-    // Csak a saját weboldalunkba beágyazott kvíz küldjön állapotot.
-    var parentOrigin;
-    try {
-      parentOrigin = new URL(document.referrer).origin;
-    } catch (e) {
-      return;
-    }
-
-    if (
-      parentOrigin !== 'https://www.neurological.hu' &&
-      parentOrigin !== 'https://neurological.hu'
-    ) {
-      return;
-    }
-
-    function textOf(id) {
-      var el = document.getElementById(id);
-      return el ? el.innerText || el.textContent || '' : '';
-    }
-
-    function visible(id) {
-      var el = document.getElementById(id);
-      return !!el && !el.classList.contains('hidden');
-    }
-
-    var feedback = document.getElementById('feedback');
-    var options = Array.from(
-      document.querySelectorAll('#options-container .option-item')
-    ).map(function (item) {
-      var input = item.querySelector('input');
-      var label = item.querySelector('label');
-
-      return {
-        text: label ? label.innerText || label.textContent : '',
-        selected: !!(input && input.checked),
-        disabled: !!(input && input.disabled),
-        locked: item.classList.contains('locked')
-      };
-    });
-
-    window.parent.postMessage({
-      type: 'nl-clarity-mirror',
-      state: {
-        question: textOf('question-text'),
-        options: options,
-        timer: textOf('timer'),
-        remaining: textOf('questions-remaining'),
-        feedback: textOf('feedback'),
-        feedbackClass: feedback ? feedback.className : '',
-        checkVisible: visible('check-btn'),
-        nextVisible: visible('next-btn'),
-        finished: visible('score-container'),
-        score: textOf('score-percent'),
-        finalFeedback: textOf('final-feedback'),
-        recommendation: textOf('neuro-recommendation')
-      }
-    }, parentOrigin);
-  } catch (e) {
-    // A tükrözés hibája nem szakíthatja meg a kvízt.
-  }
-}
-
-    var clarityMirrorOptions = document.getElementById('options-container');
-
-if (clarityMirrorOptions) {
-  clarityMirrorOptions.addEventListener(
-    'change',
-    postClarityMirrorState
-  );
-}
-
   function renderQuestion(restoredChecked = null) {
     const q = selectedQuestions[currentIndex];
     scoreAtQuestionStart = userScore;
@@ -904,7 +738,6 @@ if (clarityMirrorOptions) {
 
     // Haladás mentése (frissítés után innen folytatódik)
     saveProgress();
-    postClarityMirrorState();
   }
 
   /******************************************************
@@ -960,21 +793,20 @@ if (clarityMirrorOptions) {
 
     // A bejelölt válaszok azonnal mentésre kerülnek (frissítés után is megmaradnak)
     saveProgress();
-    postClarityMirrorState();
   }
 
   checkBtn.addEventListener('click', () => {
     if (answered) return; // már ellenőrizve, nem lehet újra
 
     const inputs = [...optionsContainerEl.querySelectorAll('input')];
-    
+
     // Indices that the user checked
     const checkedIndices = inputs
       .filter(inp => inp.checked)
       .map(inp => parseInt(inp.value));
 
     submitAnswer(checkedIndices);
-    requestScroll('bottom'); // Ellenőrzés után: a kvíz aljára (visszajelzés + Következő gomb)
+    requestScroll('bottom'); // Ellenőrzés után: a kvíz aljára
   });
 
   /******************************************************
@@ -1018,13 +850,13 @@ if (clarityMirrorOptions) {
     currentIndex++;
     if (currentIndex >= selectedQuestions.length) {
       endQuiz();
-      requestScroll('top'); // a végeredmény tetejére
+      requestScroll('top');   // a végeredménynél, az endQuiz() után
       return;
     }
     nextBtn.classList.add('hidden');
     checkBtn.classList.remove('hidden');
     renderQuestion();
-    requestScroll('top'); // Következő kérdés után: a kvíz tetejére
+    requestScroll('top');     // a következő kérdésnél, a renderQuestion() után
   });
 
     
@@ -1033,9 +865,9 @@ if (clarityMirrorOptions) {
    * 10) END QUIZ
    ******************************************************/
 
-
     
-  function renderFinalFeedback(finalScore) {
+
+function renderFinalFeedback(finalScore) {
   const feedbackEl = document.getElementById('final-feedback');
 
   // Kategórianevek egységesítése az összehasonlításhoz
@@ -1171,58 +1003,24 @@ if (clarityMirrorOptions) {
 
     feedbackEl.appendChild(list);
   }
-
-  // NeuroLogical ajánlás a személyes visszajelzés alatt
-  renderNeuroRecommendation(level, weakCategories.length > 0);
-}
-
-function renderNeuroRecommendation(level, hasWeakCategory) {
-  const boxEl = document.getElementById('neuro-recommendation');
-
-  const messages = {
-    fail:
-      'Ne aggódj, szerencsére a NeuroLogical segítségével gyorsan és hatékonyan tudod elsajátítani ezeket a témákat.',
-    medium:
-      'Szerencsére a NeuroLogical segítségével gyorsan és hatékonyan tudod elsajátítani ezeket a témákat.',
-    excellent:
-      'Ha szeretnél biztosra menni, a NeuroLogical segítségével ki tudod maxolni a benned lévő potenciált.'
-  };
-
-  boxEl.replaceChildren();
-
-  // 80% felett csak akkor jelenik meg, ha van 80% alatti témája
-  if (level === 'excellent' && !hasWeakCategory) {
-    boxEl.classList.add('hidden');
-    return;
-  }
-
-  const brandEl = document.createElement('span');
-  brandEl.className = 'neuro-recommendation__brand';
-  brandEl.textContent = 'Mit kínál a NeuroLogical?';
-
-  const textEl = document.createElement('p');
-  textEl.textContent = messages[level] || '';
-
-  boxEl.appendChild(brandEl);
-  boxEl.appendChild(textEl);
-  boxEl.classList.remove('hidden');
 }
     
-    function endQuiz() {
+    
+  function endQuiz() {
     clearInterval(timerInterval);
     timerInterval = null;
     clearProgress(); // a befejezett teszt után frissítéskor újraindul
     document.getElementById('quiz-layout').style.display = 'none';
 
-    // Convert userScore to a final percentage
-    const finalScore = (userScore / selectedQuestions.length) * 100;
+   // Végső pontszám százalékban
+const finalScore = (userScore / selectedQuestions.length) * 100;
 
 scorePercentEl.textContent = finalScore.toFixed(2) + '%';
 
+// Személyre szabott, kategóriánkénti visszajelzés
 renderFinalFeedback(finalScore);
 
 scoreContainerEl.classList.remove('hidden');
-      postClarityMirrorState();
   }
 
   /******************************************************
